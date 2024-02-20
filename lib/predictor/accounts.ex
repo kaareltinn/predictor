@@ -350,4 +350,8 @@ defmodule Predictor.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def delete_all_users do
+    Repo.delete_all(User)
+  end
 end
