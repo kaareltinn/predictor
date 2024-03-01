@@ -17,4 +17,23 @@ defmodule Predictor.CompetitionsFixtures do
 
     competition
   end
+
+  @doc """
+  Generate a match.
+  """
+  def match_fixture(attrs \\ %{}) do
+    {:ok, match} =
+      attrs
+      |> Enum.into(%{
+        away_goals: 1,
+        away_penalties: 0,
+        home_goals: 2,
+        home_penaltis: 0,
+        kickoff_at: ~U[2024-02-28 21:58:00Z],
+        status: "scheduled"
+      })
+      |> Predictor.Competitions.create_match()
+
+    match
+  end
 end
