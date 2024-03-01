@@ -3,6 +3,7 @@ defmodule Predictor.Competitions.Match do
   import Ecto.Changeset
 
   schema "matches" do
+    field :code, :string
     field :status, Ecto.Enum, values: [:scheduled, :in_progress, :finished], default: :scheduled
     field :home_goals, :integer
     field :away_goals, :integer
@@ -20,6 +21,7 @@ defmodule Predictor.Competitions.Match do
   def changeset(match, attrs) do
     match
     |> cast(attrs, [
+      :code,
       :home_goals,
       :away_goals,
       :home_penaltis,
@@ -28,6 +30,7 @@ defmodule Predictor.Competitions.Match do
       :status
     ])
     |> validate_required([
+      :code,
       :home_goals,
       :away_goals,
       :home_penaltis,
@@ -35,5 +38,6 @@ defmodule Predictor.Competitions.Match do
       :kickoff_at,
       :status
     ])
+    |> unique_constraint(:code)
   end
 end

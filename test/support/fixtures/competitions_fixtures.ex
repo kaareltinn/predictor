@@ -25,6 +25,7 @@ defmodule Predictor.CompetitionsFixtures do
     {:ok, match} =
       attrs
       |> Enum.into(%{
+        code: "WC2022:1",
         away_goals: 1,
         away_penalties: 0,
         home_goals: 2,

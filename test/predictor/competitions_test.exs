@@ -88,6 +88,7 @@ defmodule Predictor.CompetitionsTest do
 
     test "create_match/1 with valid data creates a match" do
       valid_attrs = %{
+        code: "some code",
         status: "scheduled",
         home_goals: 0,
         away_goals: 0,
@@ -97,12 +98,30 @@ defmodule Predictor.CompetitionsTest do
       }
 
       assert {:ok, %Match{} = match} = Competitions.create_match(valid_attrs)
+      assert match.code == "some code"
       assert match.status == :scheduled
       assert match.home_goals == 0
       assert match.away_goals == 0
       assert match.home_penaltis == 0
       assert match.away_penalties == 0
       assert match.kickoff_at == ~U[2024-02-28 21:58:00Z]
+    end
+
+    test "create_match/1 with already existing code (case-insensitive) fails" do
+      match = match_fixture()
+
+      invalid_attrs = %{
+        code: String.downcase(match.code),
+        status: "scheduled",
+        home_goals: 0,
+        away_goals: 0,
+        home_penaltis: 0,
+        away_penalties: 0,
+        kickoff_at: ~U[2024-02-28 21:58:00Z]
+      }
+
+      assert {:error, %Ecto.Changeset{errors: [code: {"has already been taken", _}]}} =
+               Competitions.create_match(invalid_attrs)
     end
 
     test "create_match/1 with invalid data returns error changeset" do
