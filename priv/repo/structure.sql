@@ -106,6 +106,42 @@ ALTER SEQUENCE public.matches_id_seq OWNED BY public.matches.id;
 
 
 --
+-- Name: predictions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.predictions (
+    id bigint NOT NULL,
+    home_goals integer,
+    away_goals integer,
+    home_penaltis integer,
+    away_penalties integer,
+    user_id bigint NOT NULL,
+    match_id bigint NOT NULL,
+    inserted_at timestamp(0) without time zone NOT NULL,
+    updated_at timestamp(0) without time zone NOT NULL
+);
+
+
+--
+-- Name: predictions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.predictions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: predictions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.predictions_id_seq OWNED BY public.predictions.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -229,6 +265,13 @@ ALTER TABLE ONLY public.matches ALTER COLUMN id SET DEFAULT nextval('public.matc
 
 
 --
+-- Name: predictions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.predictions ALTER COLUMN id SET DEFAULT nextval('public.predictions_id_seq'::regclass);
+
+
+--
 -- Name: teams id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -263,6 +306,14 @@ ALTER TABLE ONLY public.competitions
 
 ALTER TABLE ONLY public.matches
     ADD CONSTRAINT matches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: predictions predictions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.predictions
+    ADD CONSTRAINT predictions_pkey PRIMARY KEY (id);
 
 
 --
@@ -326,6 +377,20 @@ CREATE INDEX matches_home_team_id_index ON public.matches USING btree (home_team
 
 
 --
+-- Name: predictions_match_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX predictions_match_id_index ON public.predictions USING btree (match_id);
+
+
+--
+-- Name: predictions_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX predictions_user_id_index ON public.predictions USING btree (user_id);
+
+
+--
 -- Name: teams_code_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -378,6 +443,22 @@ ALTER TABLE ONLY public.matches
 
 
 --
+-- Name: predictions predictions_match_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.predictions
+    ADD CONSTRAINT predictions_match_id_fkey FOREIGN KEY (match_id) REFERENCES public.matches(id);
+
+
+--
+-- Name: predictions predictions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.predictions
+    ADD CONSTRAINT predictions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: users_tokens users_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -395,3 +476,4 @@ INSERT INTO public."schema_migrations" (version) VALUES (20240220211448);
 INSERT INTO public."schema_migrations" (version) VALUES (20240229215844);
 INSERT INTO public."schema_migrations" (version) VALUES (20240301102644);
 INSERT INTO public."schema_migrations" (version) VALUES (20240304211501);
+INSERT INTO public."schema_migrations" (version) VALUES (20240306185714);
