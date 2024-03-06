@@ -37,6 +37,10 @@ defmodule Predictor.Teams do
   """
   def get_team!(id), do: Repo.get!(Team, id)
 
+  def get_team_by_code!(code) do
+    Repo.get_by!(Team, code: code)
+  end
+
   @doc """
   Creates a team.
 
