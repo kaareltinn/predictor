@@ -4,6 +4,7 @@ defmodule Predictor.Competitions.Competition do
 
   schema "competitions" do
     field :name, :string
+    has_many :matches, Predictor.Competitions.Match
 
     timestamps(type: :utc_datetime)
   end

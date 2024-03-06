@@ -26,9 +26,9 @@ defmodule Predictor.CompetitionsFixtures do
       attrs
       |> Enum.into(%{
         code: "WC2022:1",
-        away_goals: 1,
+        away_goals: 0,
         away_penalties: 0,
-        home_goals: 2,
+        home_goals: 0,
         home_penaltis: 0,
         kickoff_at: ~U[2024-02-28 21:58:00Z],
         status: "scheduled"

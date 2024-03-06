@@ -66,6 +66,7 @@ defmodule Predictor.CompetitionsTest do
     alias Predictor.Competitions.Match
 
     import Predictor.CompetitionsFixtures
+    import Predictor.TeamsFixtures
 
     @invalid_attrs %{
       status: nil,
@@ -76,20 +77,37 @@ defmodule Predictor.CompetitionsTest do
       kickoff_at: nil
     }
 
-    test "list_matches/0 returns all matches" do
-      match = match_fixture()
+    setup do
+      competition = competition_fixture()
+
+      home_team = team_fixture(%{name: "Netherlands", code: "NED", type: "national"})
+      away_team = team_fixture(%{name: "Belgium", code: "BEL", type: "national"})
+
+      match =
+        match_fixture(%{competition: competition, home_team: home_team, away_team: away_team})
+
+      {:ok, home_team: home_team, away_team: away_team, competition: competition, match: match}
+    end
+
+    test "list_matches/0 returns all matches", %{match: match} do
       assert Competitions.list_matches() == [match]
     end
 
-    test "get_match!/1 returns the match with given id" do
-      match = match_fixture()
+    test "get_match!/1 returns the match with given id", %{match: match} do
       assert Competitions.get_match!(match.id) == match
     end
 
-    test "create_match/1 with valid data creates a match" do
+    test "create_match/1 with valid data creates a match", %{
+      home_team: home_team,
+      away_team: away_team,
+      competition: competition
+    } do
       valid_attrs = %{
         code: "some code",
         status: "scheduled",
+        home_team: home_team,
+        away_team: away_team,
+        competition: competition,
         home_goals: 0,
         away_goals: 0,
         home_penaltis: 0,
@@ -100,6 +118,9 @@ defmodule Predictor.CompetitionsTest do
       assert {:ok, %Match{} = match} = Competitions.create_match(valid_attrs)
       assert match.code == "some code"
       assert match.status == :scheduled
+      assert match.competition == competition
+      assert match.home_team == home_team
+      assert match.away_team == away_team
       assert match.home_goals == 0
       assert match.away_goals == 0
       assert match.home_penaltis == 0
@@ -107,12 +128,13 @@ defmodule Predictor.CompetitionsTest do
       assert match.kickoff_at == ~U[2024-02-28 21:58:00Z]
     end
 
-    test "create_match/1 with already existing code (case-insensitive) fails" do
-      match = match_fixture()
-
+    test "create_match/1 with already existing code (case-insensitive) fails", %{match: match} do
       invalid_attrs = %{
         code: String.downcase(match.code),
         status: "scheduled",
+        home_team: team_fixture(),
+        away_team: team_fixture(),
+        competition: match.competition,
         home_goals: 0,
         away_goals: 0,
         home_penaltis: 0,
@@ -128,41 +150,54 @@ defmodule Predictor.CompetitionsTest do
       assert {:error, %Ecto.Changeset{}} = Competitions.create_match(@invalid_attrs)
     end
 
-    test "update_match/2 with valid data updates the match" do
-      match = match_fixture()
-
+    test "update_match/2 with valid data updates the match", %{match: match} do
       update_attrs = %{
         status: "in_progress",
-        home_goals: 0,
-        away_goals: 0,
+        home_team: match.home_team,
+        away_team: match.away_team,
+        competition: match.competition,
+        home_goals: 2,
+        away_goals: 1,
         home_penaltis: 0,
-        away_penalties: 0,
-        kickoff_at: ~U[2024-02-29 21:58:00Z]
+        away_penalties: 0
       }
 
       assert {:ok, %Match{} = match} = Competitions.update_match(match, update_attrs)
       assert match.status == :in_progress
-      assert match.home_goals == 0
-      assert match.away_goals == 0
+      assert match.home_goals == 2
+      assert match.away_goals == 1
       assert match.home_penaltis == 0
       assert match.away_penalties == 0
-      assert match.kickoff_at == ~U[2024-02-29 21:58:00Z]
     end
 
-    test "update_match/2 with invalid data returns error changeset" do
-      match = match_fixture()
+    test "update_match/2 with invalid data returns error changeset", %{match: match} do
       assert {:error, %Ecto.Changeset{}} = Competitions.update_match(match, @invalid_attrs)
       assert match == Competitions.get_match!(match.id)
     end
 
-    test "delete_match/1 deletes the match" do
-      match = match_fixture()
+    test "delete_match/1 deletes the match", %{match: match} do
       assert {:ok, %Match{}} = Competitions.delete_match(match)
       assert_raise Ecto.NoResultsError, fn -> Competitions.get_match!(match.id) end
     end
 
-    test "change_match/1 returns a match changeset" do
-      match = match_fixture()
+    test "delete_all_matches/1 deletes all matches by given competition",
+         %{match: match} = context do
+      another_competition = competition_fixture()
+
+      another_match =
+        match_fixture(%{
+          code: "EURO2024:1",
+          competition: another_competition,
+          home_team: context[:home_team],
+          away_team: context[:home_team]
+        })
+
+      assert {1, nil} = Competitions.delete_all_matches(another_competition.id)
+      assert_raise Ecto.NoResultsError, fn -> Competitions.get_match!(another_match.id) end
+      assert match == Competitions.get_match!(match.id)
+    end
+
+    test "change_match/1 returns a match changeset", %{match: match} do
       assert %Ecto.Changeset{} = Competitions.change_match(match)
     end
   end

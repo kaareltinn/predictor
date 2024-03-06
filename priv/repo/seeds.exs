@@ -12,12 +12,13 @@
 alias Predictor.Accounts
 alias Predictor.Competitions
 alias Predictor.Teams
+alias Predictor.Competitions.Match
 
 Accounts.delete_all_users()
 {:ok, _user} = Accounts.register_user(%{email: "foo@bar.com", password: "verysecretpassword"})
 
 Competitions.delete_all_competitions()
-Competitions.create_competition(%{name: "World Cup 2022"})
+{:ok, competition} = Competitions.create_competition(%{name: "World Cup 2022"})
 
 Teams.delete_all_teams()
 
@@ -75,3 +76,5 @@ data =
 placeholders = %{now: now}
 
 Predictor.Repo.insert_all(Teams.Team, data, placeholders: placeholders)
+
+Competitions.delete_all_matches(competition.id)

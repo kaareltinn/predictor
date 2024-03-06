@@ -118,7 +118,9 @@ defmodule Predictor.Competitions do
 
   """
   def list_matches do
-    Repo.all(Match)
+    Match
+    |> Repo.all()
+    |> Repo.preload([:competition, :home_team, :away_team])
   end
 
   @doc """
@@ -135,7 +137,11 @@ defmodule Predictor.Competitions do
       ** (Ecto.NoResultsError)
 
   """
-  def get_match!(id), do: Repo.get!(Match, id)
+  def get_match!(id) do
+    Match
+    |> Repo.get!(id)
+    |> Repo.preload([:competition, :home_team, :away_team])
+  end
 
   @doc """
   Creates a match.
@@ -187,6 +193,11 @@ defmodule Predictor.Competitions do
   """
   def delete_match(%Match{} = match) do
     Repo.delete(match)
+  end
+
+  def delete_all_matches(competition_id) do
+    from(m in Match, where: m.competition_id == ^competition_id)
+    |> Repo.delete_all()
   end
 
   @doc """
