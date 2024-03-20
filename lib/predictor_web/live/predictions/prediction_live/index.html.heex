@@ -1,0 +1,49 @@
+<.live_component
+  module={PredictorWeb.Predictions.PredictionLive.FormComponent}
+  id="prediction_form"
+  form={@form}
+  user={@current_user}
+  match_ids={@match_ids}
+/>
+
+<.table id="predictions" rows={Enum.map(@match_ids, fn id -> @matches_by_id[id] end)}>
+  <:col :let={m}>
+    <%= if m.user_prediction do %>
+      <.input field={@form[:id]} value={m.user_prediction.id} type="hidden" form={"prediction-form-#{m.id}"} />
+    <% end %>
+  </:col>
+  <:col :let={m}>
+    <.input field={@form[:match_id]} value={m.id} type="hidden" form={"prediction-form-#{m.id}"} />
+  </:col>
+  <:col :let={m}>
+    <%= if m.user_prediction do %>
+      <.input name="form_action" value={"edit"} type="hidden" form={"prediction-form-#{m.id}"} />
+    <% else %>
+      <.input name="form_action" value={"add"} type="hidden" form={"prediction-form-#{m.id}"} />
+    <% end %>
+  </:col>
+
+  <:col :let={m} label="Home team" bold><%= m.home_team.name %></:col>
+  <:col :let={m}>
+    <%= if m.user_prediction do %>
+      <.input field={@form[:home_goals]} value={m.user_prediction.home_goals} form={"prediction-form-#{m.id}"} />
+    <% else %>
+      <.input field={@form[:home_goals]} form={"prediction-form-#{m.id}"} />
+    <% end %>
+  </:col>
+  <:col :let={_} >:</:col>
+  <:col :let={m}>
+    <%= if m.user_prediction do %>
+      <.input field={@form[:away_goals]} value={m.user_prediction.away_goals} form={"prediction-form-#{m.id}"} />
+    <% else %>
+      <.input field={@form[:away_goals]} form={"prediction-form-#{m.id}"} />
+    <% end %>
+  </:col>
+  <:col :let={m} label="Away team" bold><%= m.away_team.name %></:col>
+
+  <:action :let={m}>
+    <.button phx-disable-with="Saving..." form={"prediction-form-#{m.id}"}>
+      Save
+    </.button>
+  </:action>
+</.table>

@@ -7,6 +7,7 @@ defmodule Predictor.Competitions do
   alias Predictor.Repo
 
   alias Predictor.Competitions.Competition
+  alias Predictor.Predictions.Prediction
 
   @doc """
   Returns the list of competitions.
@@ -35,7 +36,11 @@ defmodule Predictor.Competitions do
       ** (Ecto.NoResultsError)
 
   """
-  def get_competition!(id), do: Repo.get!(Competition, id)
+  def get_competition!(id) do
+    Competition
+    |> Repo.get!(id)
+    |> Repo.preload(matches: [:home_team, :away_team])
+  end
 
   @doc """
   Creates a competition.
@@ -121,6 +126,19 @@ defmodule Predictor.Competitions do
     Match
     |> Repo.all()
     |> Repo.preload([:competition, :home_team, :away_team])
+  end
+
+  def list_matches_with_user_predictions(user_id, competition_id) do
+    predictions_query =
+      Prediction
+      |> where(user_id: ^user_id)
+
+    query =
+      from m in Match,
+        where: m.competition_id == ^competition_id,
+        preload: [{:user_prediction, ^predictions_query}, :home_team, :away_team]
+
+    Repo.all(query)
   end
 
   @doc """

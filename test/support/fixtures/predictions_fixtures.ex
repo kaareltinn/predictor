@@ -11,10 +11,10 @@ defmodule Predictor.PredictionsFixtures do
     {:ok, prediction} =
       attrs
       |> Enum.into(%{
-        away_goals: 42,
-        away_penalties: 42,
-        home_goals: 42,
-        home_penaltis: 42
+        away_goals: 2,
+        away_penalties: 0,
+        home_goals: 1,
+        home_penaltis: 0
       })
       |> Predictor.Predictions.create_prediction()
 

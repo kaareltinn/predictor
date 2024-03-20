@@ -6,6 +6,7 @@ defmodule Predictor.Teams.Team do
     field :code, :string
     field :name, :string
     field :type, :string
+    has_many :matches, Predictor.Competitions.Match
 
     timestamps(type: :utc_datetime)
   end

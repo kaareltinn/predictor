@@ -3,6 +3,7 @@ defmodule Predictor.Competitions.Match do
   import Ecto.Changeset
 
   alias Predictor.Competitions.Competition
+  alias Predictor.Predictions.Prediction
   alias Predictor.Teams.Team
 
   schema "matches" do
@@ -16,6 +17,7 @@ defmodule Predictor.Competitions.Match do
     belongs_to :home_team, Team
     belongs_to :away_team, Team
     belongs_to :competition, Competition
+    has_one :user_prediction, Prediction, on_delete: :delete_all
 
     timestamps(type: :utc_datetime)
   end

@@ -8,8 +8,8 @@ defmodule Predictor.Predictions.Prediction do
   schema "predictions" do
     field :home_goals, :integer
     field :away_goals, :integer
-    field :home_penaltis, :integer
-    field :away_penalties, :integer
+    field :home_penaltis, :integer, default: 0
+    field :away_penalties, :integer, default: 0
     belongs_to :user, User
     belongs_to :match, Match
 
@@ -17,9 +17,25 @@ defmodule Predictor.Predictions.Prediction do
   end
 
   @doc false
-  def changeset(prediction, attrs) do
+  def changeset(prediction, %{match: %Match{}, user: %User{}} = attrs) do
     prediction
     |> cast(attrs, [:home_goals, :away_goals, :home_penaltis, :away_penalties])
-    |> validate_required([:home_goals, :away_goals, :home_penaltis, :away_penalties])
+    |> put_assoc(:match, attrs[:match])
+    |> put_assoc(:user, attrs[:user])
+    |> validate_required([:home_goals, :away_goals])
+  end
+
+  @doc false
+  def changeset(prediction, attrs) do
+    prediction
+    |> cast(attrs, [
+      :home_goals,
+      :away_goals,
+      :home_penaltis,
+      :away_penalties,
+      :user_id,
+      :match_id
+    ])
+    |> validate_required([:home_goals, :away_goals, :user_id, :match_id])
   end
 end

@@ -17,7 +17,7 @@ defmodule Predictor.CompetitionsTest do
 
     test "get_competition!/1 returns the competition with given id" do
       competition = competition_fixture()
-      assert Competitions.get_competition!(competition.id) == competition
+      assert Competitions.get_competition!(competition.id).id == competition.id
     end
 
     test "create_competition/1 with valid data creates a competition" do
@@ -47,7 +47,7 @@ defmodule Predictor.CompetitionsTest do
       assert {:error, %Ecto.Changeset{}} =
                Competitions.update_competition(competition, @invalid_attrs)
 
-      assert competition == Competitions.get_competition!(competition.id)
+      assert competition.id == Competitions.get_competition!(competition.id).id
     end
 
     test "delete_competition/1 deletes the competition" do
@@ -63,9 +63,12 @@ defmodule Predictor.CompetitionsTest do
   end
 
   describe "matches" do
+    alias Predictor.Predictions
     alias Predictor.Competitions.Match
 
+    import Predictor.AccountsFixtures
     import Predictor.CompetitionsFixtures
+    import Predictor.PredictionsFixtures
     import Predictor.TeamsFixtures
 
     @invalid_attrs %{
@@ -89,8 +92,31 @@ defmodule Predictor.CompetitionsTest do
       {:ok, home_team: home_team, away_team: away_team, competition: competition, match: match}
     end
 
+    setup context do
+      user1 = user_fixture()
+      user2 = user_fixture()
+
+      user1_prediction = prediction_fixture(%{user: user1, match: context.match})
+      user2_prediction = prediction_fixture(%{user: user2, match: context.match})
+
+      {:ok,
+       user1: user1,
+       user2: user2,
+       user1_prediction: user1_prediction,
+       user2_prediction: user2_prediction}
+    end
+
     test "list_matches/0 returns all matches", %{match: match} do
       assert Competitions.list_matches() == [match]
+    end
+
+    test "list_matches_with_user_predictions/2 returns all matches with user predictions", %{
+      user1: user1,
+      user1_prediction: user1_prediction,
+      competition: competition
+    } do
+      [match] = Competitions.list_matches_with_user_predictions(user1.id, competition.id)
+      assert match.user_prediction.id == user1_prediction.id
     end
 
     test "get_match!/1 returns the match with given id", %{match: match} do
@@ -175,9 +201,16 @@ defmodule Predictor.CompetitionsTest do
       assert match == Competitions.get_match!(match.id)
     end
 
-    test "delete_match/1 deletes the match", %{match: match} do
+    test "delete_match/1 deletes the match and associated predictions",
+         %{
+           match: match,
+           user1_prediction: user1_prediction,
+           user2_prediction: user2_prediction
+         } do
       assert {:ok, %Match{}} = Competitions.delete_match(match)
       assert_raise Ecto.NoResultsError, fn -> Competitions.get_match!(match.id) end
+      assert_raise Ecto.NoResultsError, fn -> Predictions.get_prediction!(user1_prediction.id) end
+      assert_raise Ecto.NoResultsError, fn -> Predictions.get_prediction!(user2_prediction.id) end
     end
 
     test "delete_all_matches/1 deletes all matches by given competition",

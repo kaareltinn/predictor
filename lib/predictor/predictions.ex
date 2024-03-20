@@ -18,7 +18,9 @@ defmodule Predictor.Predictions do
 
   """
   def list_predictions do
-    Repo.all(Prediction)
+    Prediction
+    |> Repo.all()
+    |> Repo.preload([:user, {:match, [:competition, :home_team, :away_team]}])
   end
 
   @doc """
@@ -35,7 +37,10 @@ defmodule Predictor.Predictions do
       ** (Ecto.NoResultsError)
 
   """
-  def get_prediction!(id), do: Repo.get!(Prediction, id)
+  def get_prediction!(id) do
+    Repo.get!(Prediction, id)
+    |> Repo.preload([:user, {:match, [:competition, :home_team, :away_team]}])
+  end
 
   @doc """
   Creates a prediction.
@@ -87,6 +92,10 @@ defmodule Predictor.Predictions do
   """
   def delete_prediction(%Prediction{} = prediction) do
     Repo.delete(prediction)
+  end
+
+  def delete_all_predictions! do
+    Repo.delete_all(Prediction)
   end
 
   @doc """
