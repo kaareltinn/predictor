@@ -2,9 +2,11 @@ defmodule Predictor.Competitions.Competition do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Predictor.Competitions.Match
+
   schema "competitions" do
     field :name, :string
-    has_many :matches, Predictor.Competitions.Match
+    has_many :matches, Match, on_delete: :delete_all
 
     timestamps(type: :utc_datetime)
   end

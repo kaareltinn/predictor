@@ -431,7 +431,7 @@ ALTER TABLE ONLY public.matches
 --
 
 ALTER TABLE ONLY public.matches
-    ADD CONSTRAINT matches_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES public.competitions(id);
+    ADD CONSTRAINT matches_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES public.competitions(id) ON DELETE CASCADE;
 
 
 --
@@ -477,3 +477,4 @@ INSERT INTO public."schema_migrations" (version) VALUES (20240229215844);
 INSERT INTO public."schema_migrations" (version) VALUES (20240301102644);
 INSERT INTO public."schema_migrations" (version) VALUES (20240304211501);
 INSERT INTO public."schema_migrations" (version) VALUES (20240306185714);
+INSERT INTO public."schema_migrations" (version) VALUES (20240320211247);
