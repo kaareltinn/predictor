@@ -8,6 +8,8 @@ defmodule Predictor.Competitions do
 
   alias Predictor.Competitions.Competition
   alias Predictor.Predictions.Prediction
+  alias Predictor.Competitions.Match
+  alias Predictor.Teams.Team
 
   @doc """
   Returns the list of competitions.
@@ -20,6 +22,18 @@ defmodule Predictor.Competitions do
   """
   def list_competitions do
     Repo.all(Competition)
+  end
+
+  def list_competition_teams(competition_id) do
+    matches_query = from m in Match, where: m.competition_id == ^competition_id
+
+    query =
+      from t in Team,
+        join: m in subquery(matches_query),
+        on: m.home_team_id == t.id or m.away_team_id == t.id,
+        distinct: t.id
+
+    Repo.all(query)
   end
 
   @doc """
@@ -110,8 +124,6 @@ defmodule Predictor.Competitions do
   def change_competition(%Competition{} = competition, attrs \\ %{}) do
     Competition.changeset(competition, attrs)
   end
-
-  alias Predictor.Competitions.Match
 
   @doc """
   Returns the list of matches.
