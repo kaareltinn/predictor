@@ -144,6 +144,7 @@ defmodule Predictor.Competitions do
     predictions_query =
       Prediction
       |> where(user_id: ^user_id)
+      |> preload([:away_team, :home_team])
 
     query =
       from m in Match,

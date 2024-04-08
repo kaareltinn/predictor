@@ -4,6 +4,7 @@ defmodule Predictor.Predictions.Prediction do
 
   alias Predictor.Accounts.User
   alias Predictor.Competitions.Match
+  alias Predictor.Teams.Team
 
   schema "predictions" do
     field :home_goals, :integer
@@ -12,6 +13,8 @@ defmodule Predictor.Predictions.Prediction do
     field :away_penalties, :integer, default: 0
     belongs_to :user, User
     belongs_to :match, Match
+    belongs_to :home_team, Team
+    belongs_to :away_team, Team
 
     timestamps(type: :utc_datetime)
   end
@@ -34,7 +37,9 @@ defmodule Predictor.Predictions.Prediction do
       :home_penaltis,
       :away_penalties,
       :user_id,
-      :match_id
+      :match_id,
+      :home_team_id,
+      :away_team_id
     ])
     |> validate_required([:home_goals, :away_goals, :user_id, :match_id])
   end
