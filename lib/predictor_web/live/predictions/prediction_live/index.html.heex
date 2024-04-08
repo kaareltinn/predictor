@@ -12,9 +12,11 @@
       <.input field={@form[:id]} value={m.user_prediction.id} type="hidden" form={"prediction-form-#{m.id}"} />
     <% end %>
   </:col>
+
   <:col :let={m}>
     <.input field={@form[:match_id]} value={m.id} type="hidden" form={"prediction-form-#{m.id}"} />
   </:col>
+
   <:col :let={m}>
     <%= if m.user_prediction do %>
       <.input name="form_action" value={"edit"} type="hidden" form={"prediction-form-#{m.id}"} />
@@ -23,7 +25,17 @@
     <% end %>
   </:col>
 
-  <:col :let={m} label="Home team" bold><%= m.home_team.name %></:col>
+  <:col :let={m} label="Home team" bold>
+    <.live_component
+      module={TeamCell}
+      id={"#{m.id}-home-team-cell"}
+      type={:home_team}
+      field={@form[:home_team_id]}
+      match={m}
+      team={m.home_team}
+    />
+  </:col>
+
   <:col :let={m}>
     <%= if m.user_prediction do %>
       <.input field={@form[:home_goals]} value={m.user_prediction.home_goals} form={"prediction-form-#{m.id}"} />
@@ -31,15 +43,36 @@
       <.input field={@form[:home_goals]} form={"prediction-form-#{m.id}"} />
     <% end %>
   </:col>
+
   <:col :let={_} >:</:col>
+
   <:col :let={m}>
     <%= if m.user_prediction do %>
-      <.input field={@form[:away_goals]} value={m.user_prediction.away_goals} form={"prediction-form-#{m.id}"} />
-    <% else %>
-      <.input field={@form[:away_goals]} form={"prediction-form-#{m.id}"} />
-    <% end %>
+      <.input
+        field={@form[:away_goals]}
+        value={m.user_prediction.away_goals}
+        form={"prediction-form-#{m.id}"}
+        errors={@form.errors}
+      />
+      <% else %>
+        <.input
+        field={@form[:away_goals]}
+        form={"prediction-form-#{m.id}"}
+        errors={@form.errors}
+        />
+      <% end %>
   </:col>
-  <:col :let={m} label="Away team" bold><%= m.away_team.name %></:col>
+
+  <:col :let={m} label="Away team" bold>
+    <.live_component
+      module={TeamCell}
+      id={"#{m.id}-away-team-cell"}
+      type={:away_team}
+      field={@form[:away_team_id]}
+      match={m}
+      team={m.away_team}
+    />
+  </:col>
 
   <:action :let={m}>
     <.button phx-disable-with="Saving..." form={"prediction-form-#{m.id}"}>

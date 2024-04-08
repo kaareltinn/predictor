@@ -4,6 +4,7 @@ defmodule PredictorWeb.Predictions.PredictionLive.Index do
   alias Predictor.Competitions
   alias Predictor.Predictions
   alias Predictor.Predictions.Prediction
+  alias PredictorWeb.Predictions.PredictionLive.TeamCell
 
   def mount(%{"competition_id" => competition_id}, _session, socket) do
     competition = Competitions.get_competition!(competition_id)
