@@ -110,4 +110,100 @@ defmodule Predictor.Predictions do
   def change_prediction(%Prediction{} = prediction, attrs \\ %{}) do
     Prediction.changeset(prediction, attrs)
   end
+
+  alias Predictor.Predictions.PredictionSet
+
+  @doc """
+  Returns the list of prediction_sets.
+
+  ## Examples
+
+      iex> list_prediction_sets()
+      [%PredictionSet{}, ...]
+
+  """
+  def list_prediction_sets do
+    Repo.all(PredictionSet)
+  end
+
+  @doc """
+  Gets a single prediction_set.
+
+  Raises `Ecto.NoResultsError` if the Prediction set does not exist.
+
+  ## Examples
+
+      iex> get_prediction_set!(123)
+      %PredictionSet{}
+
+      iex> get_prediction_set!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_prediction_set!(id), do: Repo.get!(PredictionSet, id)
+
+  @doc """
+  Creates a prediction_set.
+
+  ## Examples
+
+      iex> create_prediction_set(%{field: value})
+      {:ok, %PredictionSet{}}
+
+      iex> create_prediction_set(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_prediction_set(attrs \\ %{}) do
+    %PredictionSet{}
+    |> PredictionSet.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a prediction_set.
+
+  ## Examples
+
+      iex> update_prediction_set(prediction_set, %{field: new_value})
+      {:ok, %PredictionSet{}}
+
+      iex> update_prediction_set(prediction_set, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_prediction_set(%PredictionSet{} = prediction_set, attrs) do
+    prediction_set
+    |> PredictionSet.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a prediction_set.
+
+  ## Examples
+
+      iex> delete_prediction_set(prediction_set)
+      {:ok, %PredictionSet{}}
+
+      iex> delete_prediction_set(prediction_set)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_prediction_set(%PredictionSet{} = prediction_set) do
+    Repo.delete(prediction_set)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking prediction_set changes.
+
+  ## Examples
+
+      iex> change_prediction_set(prediction_set)
+      %Ecto.Changeset{data: %PredictionSet{}}
+
+  """
+  def change_prediction_set(%PredictionSet{} = prediction_set, attrs \\ %{}) do
+    PredictionSet.changeset(prediction_set, attrs)
+  end
 end

@@ -89,4 +89,58 @@ defmodule Predictor.PredictionsTest do
       assert %Ecto.Changeset{} = Predictions.change_prediction(prediction)
     end
   end
+
+  describe "prediction_sets" do
+    alias Predictor.Predictions.PredictionSet
+
+    import Predictor.PredictionsFixtures
+
+    @invalid_attrs %{name: nil}
+
+    test "list_prediction_sets/0 returns all prediction_sets" do
+      prediction_set = prediction_set_fixture()
+      assert Predictions.list_prediction_sets() == [prediction_set]
+    end
+
+    test "get_prediction_set!/1 returns the prediction_set with given id" do
+      prediction_set = prediction_set_fixture()
+      assert Predictions.get_prediction_set!(prediction_set.id) == prediction_set
+    end
+
+    test "create_prediction_set/1 with valid data creates a prediction_set" do
+      valid_attrs = %{name: "some name"}
+
+      assert {:ok, %PredictionSet{} = prediction_set} = Predictions.create_prediction_set(valid_attrs)
+      assert prediction_set.name == "some name"
+    end
+
+    test "create_prediction_set/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Predictions.create_prediction_set(@invalid_attrs)
+    end
+
+    test "update_prediction_set/2 with valid data updates the prediction_set" do
+      prediction_set = prediction_set_fixture()
+      update_attrs = %{name: "some updated name"}
+
+      assert {:ok, %PredictionSet{} = prediction_set} = Predictions.update_prediction_set(prediction_set, update_attrs)
+      assert prediction_set.name == "some updated name"
+    end
+
+    test "update_prediction_set/2 with invalid data returns error changeset" do
+      prediction_set = prediction_set_fixture()
+      assert {:error, %Ecto.Changeset{}} = Predictions.update_prediction_set(prediction_set, @invalid_attrs)
+      assert prediction_set == Predictions.get_prediction_set!(prediction_set.id)
+    end
+
+    test "delete_prediction_set/1 deletes the prediction_set" do
+      prediction_set = prediction_set_fixture()
+      assert {:ok, %PredictionSet{}} = Predictions.delete_prediction_set(prediction_set)
+      assert_raise Ecto.NoResultsError, fn -> Predictions.get_prediction_set!(prediction_set.id) end
+    end
+
+    test "change_prediction_set/1 returns a prediction_set changeset" do
+      prediction_set = prediction_set_fixture()
+      assert %Ecto.Changeset{} = Predictions.change_prediction_set(prediction_set)
+    end
+  end
 end

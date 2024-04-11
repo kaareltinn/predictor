@@ -20,4 +20,18 @@ defmodule Predictor.PredictionsFixtures do
 
     prediction
   end
+
+  @doc """
+  Generate a prediction_set.
+  """
+  def prediction_set_fixture(attrs \\ %{}) do
+    {:ok, prediction_set} =
+      attrs
+      |> Enum.into(%{
+        name: "some name"
+      })
+      |> Predictor.Predictions.create_prediction_set()
+
+    prediction_set
+  end
 end
