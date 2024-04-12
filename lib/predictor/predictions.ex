@@ -126,6 +126,16 @@ defmodule Predictor.Predictions do
     Repo.all(PredictionSet)
   end
 
+  def list_user_prediction_sets(user_id) do
+    query =
+      from ps in PredictionSet,
+        where: ps.user_id == ^user_id
+
+    query
+    |> Repo.all()
+    |> Repo.preload(:competition)
+  end
+
   @doc """
   Gets a single prediction_set.
 
