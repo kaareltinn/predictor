@@ -96,12 +96,23 @@ defmodule Predictor.CompetitionsTest do
       user1 = user_fixture()
       user2 = user_fixture()
 
-      user1_prediction = prediction_fixture(%{user: user1, match: context.match})
-      user2_prediction = prediction_fixture(%{user: user2, match: context.match})
+      prediction_set_1 =
+        prediction_set_fixture(%{user: user1, competition: context.competition, name: "user_set1"})
+
+      prediction_set_2 =
+        prediction_set_fixture(%{user: user2, competition: context.competition, name: "user_set2"})
+
+      user1_prediction =
+        prediction_fixture(%{user: user1, match: context.match, prediction_set: prediction_set_1})
+
+      user2_prediction =
+        prediction_fixture(%{user: user2, match: context.match, prediction_set: prediction_set_2})
 
       {:ok,
        user1: user1,
        user2: user2,
+       prediction_set_1: prediction_set_1,
+       prediction_set_2: prediction_set_2,
        user1_prediction: user1_prediction,
        user2_prediction: user2_prediction}
     end
@@ -110,12 +121,11 @@ defmodule Predictor.CompetitionsTest do
       assert Competitions.list_matches() == [match]
     end
 
-    test "list_matches_with_user_predictions/2 returns all matches with user predictions", %{
-      user1: user1,
-      user1_prediction: user1_prediction,
-      competition: competition
+    test "list_matches_with_predictions/2 returns all matches with user predictions", %{
+      prediction_set_1: prediction_set_1,
+      user1_prediction: user1_prediction
     } do
-      [match] = Competitions.list_matches_with_user_predictions(user1.id, competition.id)
+      [match] = Competitions.list_matches_with_predictions(prediction_set_1.id)
       assert match.user_prediction.id == user1_prediction.id
     end
 

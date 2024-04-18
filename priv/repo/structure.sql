@@ -106,6 +106,39 @@ ALTER SEQUENCE public.matches_id_seq OWNED BY public.matches.id;
 
 
 --
+-- Name: prediction_sets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.prediction_sets (
+    id bigint NOT NULL,
+    name character varying(255),
+    user_id bigint,
+    competition_id bigint,
+    inserted_at timestamp(0) without time zone NOT NULL,
+    updated_at timestamp(0) without time zone NOT NULL
+);
+
+
+--
+-- Name: prediction_sets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.prediction_sets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: prediction_sets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.prediction_sets_id_seq OWNED BY public.prediction_sets.id;
+
+
+--
 -- Name: predictions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -118,7 +151,10 @@ CREATE TABLE public.predictions (
     user_id bigint NOT NULL,
     match_id bigint NOT NULL,
     inserted_at timestamp(0) without time zone NOT NULL,
-    updated_at timestamp(0) without time zone NOT NULL
+    updated_at timestamp(0) without time zone NOT NULL,
+    home_team_id bigint,
+    away_team_id bigint,
+    prediction_set_id bigint NOT NULL
 );
 
 
@@ -265,6 +301,13 @@ ALTER TABLE ONLY public.matches ALTER COLUMN id SET DEFAULT nextval('public.matc
 
 
 --
+-- Name: prediction_sets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets ALTER COLUMN id SET DEFAULT nextval('public.prediction_sets_id_seq'::regclass);
+
+
+--
 -- Name: predictions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -306,6 +349,14 @@ ALTER TABLE ONLY public.competitions
 
 ALTER TABLE ONLY public.matches
     ADD CONSTRAINT matches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: prediction_sets prediction_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets
+    ADD CONSTRAINT prediction_sets_pkey PRIMARY KEY (id);
 
 
 --
@@ -377,6 +428,20 @@ CREATE INDEX matches_home_team_id_index ON public.matches USING btree (home_team
 
 
 --
+-- Name: prediction_sets_competition_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX prediction_sets_competition_id_index ON public.prediction_sets USING btree (competition_id);
+
+
+--
+-- Name: prediction_sets_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX prediction_sets_user_id_index ON public.prediction_sets USING btree (user_id);
+
+
+--
 -- Name: predictions_match_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -443,11 +508,51 @@ ALTER TABLE ONLY public.matches
 
 
 --
+-- Name: prediction_sets prediction_sets_competition_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets
+    ADD CONSTRAINT prediction_sets_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES public.competitions(id);
+
+
+--
+-- Name: prediction_sets prediction_sets_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets
+    ADD CONSTRAINT prediction_sets_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: predictions predictions_away_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.predictions
+    ADD CONSTRAINT predictions_away_team_id_fkey FOREIGN KEY (away_team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: predictions predictions_home_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.predictions
+    ADD CONSTRAINT predictions_home_team_id_fkey FOREIGN KEY (home_team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: predictions predictions_match_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.predictions
     ADD CONSTRAINT predictions_match_id_fkey FOREIGN KEY (match_id) REFERENCES public.matches(id);
+
+
+--
+-- Name: predictions predictions_prediction_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.predictions
+    ADD CONSTRAINT predictions_prediction_set_id_fkey FOREIGN KEY (prediction_set_id) REFERENCES public.prediction_sets(id);
 
 
 --
@@ -478,3 +583,6 @@ INSERT INTO public."schema_migrations" (version) VALUES (20240301102644);
 INSERT INTO public."schema_migrations" (version) VALUES (20240304211501);
 INSERT INTO public."schema_migrations" (version) VALUES (20240306185714);
 INSERT INTO public."schema_migrations" (version) VALUES (20240320211247);
+INSERT INTO public."schema_migrations" (version) VALUES (20240323044701);
+INSERT INTO public."schema_migrations" (version) VALUES (20240410195826);
+INSERT INTO public."schema_migrations" (version) VALUES (20240412194205);

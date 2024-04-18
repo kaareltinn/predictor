@@ -4,6 +4,9 @@ defmodule Predictor.PredictionsFixtures do
   entities via the `Predictor.Predictions` context.
   """
 
+  import Predictor.AccountsFixtures
+  import Predictor.CompetitionsFixtures
+
   @doc """
   Generate a prediction.
   """
@@ -28,7 +31,9 @@ defmodule Predictor.PredictionsFixtures do
     {:ok, prediction_set} =
       attrs
       |> Enum.into(%{
-        name: "some name"
+        user: attrs[:user] || user_fixture(),
+        competition: attrs[:competition] || competition_fixture(),
+        name: "some prediction set"
       })
       |> Predictor.Predictions.create_prediction_set()
 

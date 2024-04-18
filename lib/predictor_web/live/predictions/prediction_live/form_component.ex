@@ -40,7 +40,10 @@ defmodule PredictorWeb.Predictions.PredictionLive.FormComponent do
   end
 
   defp save_prediction(socket, "add", params) do
-    params = Map.put(params, "user_id", socket.assigns.user.id)
+    params =
+      params
+      |> Map.put("user_id", socket.assigns.user.id)
+      |> Map.put("prediction_set_id", socket.assigns.prediction_set.id)
 
     case Predictions.create_prediction(params) do
       {:ok, prediction} ->

@@ -15,6 +15,14 @@ defmodule Predictor.Predictions.PredictionSet do
   end
 
   @doc false
+  def changeset(prediction_set, %{user: %User{}, competition: %Competition{}} = attrs) do
+    prediction_set
+    |> cast(attrs, [:name])
+    |> put_assoc(:user, attrs[:user])
+    |> put_assoc(:competition, attrs[:competition])
+    |> validate_required([:name])
+  end
+
   def changeset(prediction_set, attrs) do
     prediction_set
     |> cast(attrs, [:name])

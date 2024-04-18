@@ -4,6 +4,7 @@
   form={@form}
   user={@current_user}
   match_ids={@match_ids}
+  prediction_set={@prediction_set}
 />
 
 <.table id="predictions" rows={Enum.map(@match_ids, fn id -> @matches_by_id[id] end)}>

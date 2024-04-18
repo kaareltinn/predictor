@@ -140,15 +140,14 @@ defmodule Predictor.Competitions do
     |> Repo.preload([:competition, :home_team, :away_team])
   end
 
-  def list_matches_with_user_predictions(user_id, competition_id) do
+  def list_matches_with_predictions(prediction_set_id) do
     predictions_query =
       Prediction
-      |> where(user_id: ^user_id)
+      |> where(prediction_set_id: ^prediction_set_id)
       |> preload([:away_team, :home_team])
 
     query =
       from m in Match,
-        where: m.competition_id == ^competition_id,
         preload: [{:user_prediction, ^predictions_query}, :home_team, :away_team]
 
     Repo.all(query)

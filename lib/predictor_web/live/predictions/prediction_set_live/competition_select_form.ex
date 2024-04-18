@@ -2,6 +2,7 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.CompetitionSelectForm do
   use PredictorWeb, :live_component
 
   alias Predictor.Competitions
+  alias Predictor.Predictions
 
   def render(assigns) do
     ~H"""
@@ -40,6 +41,22 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.CompetitionSelectForm do
   end
 
   def handle_event("save", %{"competition_id" => competition_id}, socket) do
-    {:noreply, push_navigate(socket, to: ~p"/competitions/#{competition_id}/predictions/new")}
+    competition = Competitions.get_competition!(competition_id)
+
+    {:ok, prediction_set} =
+      Predictions.create_prediction_set(%{
+        user: socket.assigns.user,
+        competition: competition,
+        name: competition.name
+      })
+
+    {
+      :noreply,
+      push_navigate(
+        socket,
+        to:
+          ~p"/competitions/#{competition_id}/prediction_sets/#{prediction_set.id}/predictions/new"
+      )
+    }
   end
 end

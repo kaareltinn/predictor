@@ -6,19 +6,25 @@ defmodule PredictorWeb.Predictions.PredictionLive.Index do
   alias Predictor.Predictions.Prediction
   alias PredictorWeb.Predictions.PredictionLive.TeamCell
 
-  def mount(%{"competition_id" => competition_id}, _session, socket) do
+  def mount(
+        %{"competition_id" => competition_id, "prediction_set_id" => prediction_set_id},
+        _session,
+        socket
+      ) do
     competition = Competitions.get_competition!(competition_id)
+
+    prediction_set =
+      Predictions.get_prediction_set!(prediction_set_id)
+
     changeset = Predictions.change_prediction(%Prediction{})
 
     matches =
-      Competitions.list_matches_with_user_predictions(
-        socket.assigns.current_user.id,
-        competition.id
-      )
+      Competitions.list_matches_with_predictions(prediction_set_id)
 
     {:ok,
      socket
      |> assign(:competition, competition)
+     |> assign(:prediction_set, prediction_set)
      |> assign(:matches_by_id, matches_by_id(matches))
      |> assign(:match_ids, match_ids(matches))
      |> assign(:form, to_form(changeset))}

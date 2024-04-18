@@ -70,7 +70,10 @@ defmodule PredictorWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       live "/competitions/predictions", Predictions.PredictionSetLive.Index
-      live "/competitions/:competition_id/predictions/new", Predictions.PredictionLive.Index, :new
+
+      live "/competitions/:competition_id/prediction_sets/:prediction_set_id/predictions/new",
+           Predictions.PredictionLive.Index,
+           :new
     end
   end
 
