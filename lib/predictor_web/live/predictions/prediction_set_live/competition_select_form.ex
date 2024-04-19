@@ -11,11 +11,14 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.CompetitionSelectForm do
         id="competition-select-form"
         for={@form}
         phx-target={@myself}
+        phx-change="validate"
         phx-submit="save"
         phx-update="ignore"
       >
+        <.input field={@form[:name]} label="Name" />
         <.input
           field={@form[:competition_id]}
+          label="Competition"
           type="select"
           prompt="Select competition"
           options={Enum.map(@competitions, &{&1.name, &1.id})}
@@ -29,7 +32,7 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.CompetitionSelectForm do
 
   def update(assigns, socket) do
     competitions = Competitions.list_competitions()
-    form = to_form(%{"competition_id" => nil})
+    form = to_form(Predictions.change_prediction_set(%Predictions.PredictionSet{}))
 
     {
       :ok,
@@ -40,23 +43,31 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.CompetitionSelectForm do
     }
   end
 
-  def handle_event("save", %{"competition_id" => competition_id}, socket) do
-    competition = Competitions.get_competition!(competition_id)
+  def handle_event("validate", params, socket) do
+    form = Predictions.change_prediction_set(%Predictions.PredictionSet{}, params) |> to_form()
 
-    {:ok, prediction_set} =
-      Predictions.create_prediction_set(%{
-        user: socket.assigns.user,
-        competition: competition,
-        name: competition.name
-      })
+    {:noreply, assign(socket, form: form)}
+  end
 
-    {
-      :noreply,
-      push_navigate(
-        socket,
-        to:
-          ~p"/competitions/#{competition_id}/prediction_sets/#{prediction_set.id}/predictions/new"
-      )
-    }
+  def handle_event("save", %{"prediction_set" => params}, socket) do
+    case Predictions.create_prediction_set(%{
+           user_id: socket.assigns.user.id,
+           competition_id: params["competition_id"],
+           name: params["name"]
+         }) do
+      {:ok, prediction_set} ->
+        {
+          :noreply,
+          push_navigate(
+            socket,
+            to:
+              ~p"/competitions/#{params["competition_id"]}/prediction_sets/#{prediction_set.id}/predictions/new"
+          )
+        }
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        dbg(to_form(changeset))
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
   end
 end

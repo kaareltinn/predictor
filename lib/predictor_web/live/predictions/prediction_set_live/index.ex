@@ -35,6 +35,9 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.Index do
           )
         }
       >
+        <:col :let={ps} label="Name">
+          <%= ps.name %>
+        </:col>
         <:col :let={ps} label="Competition">
           <%= ps.competition.name %>
         </:col>

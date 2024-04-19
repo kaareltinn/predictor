@@ -20,12 +20,12 @@ defmodule Predictor.Predictions.PredictionSet do
     |> cast(attrs, [:name])
     |> put_assoc(:user, attrs[:user])
     |> put_assoc(:competition, attrs[:competition])
-    |> validate_required([:name])
+    |> validate_required([:name, :user, :competition])
   end
 
   def changeset(prediction_set, attrs) do
     prediction_set
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :user_id, :competition_id])
+    |> validate_required([:name, :user_id, :competition_id])
   end
 end
