@@ -1,66 +1,354 @@
 [
-  {"code": "WC2022:1", "home_team_code": "QAT", "away_team_code": "ECU"},
-  {"code": "WC2022:2", "home_team_code": "SEN", "away_team_code": "NED"},
-  {"code": "WC2022:3", "home_team_code": "ENG", "away_team_code": "IR"},
-  {"code": "WC2022:4", "home_team_code": "USA", "away_team_code": "WAL"},
-  {"code": "WC2022:5", "home_team_code": "ARG", "away_team_code": "KSA"},
-  {"code": "WC2022:6", "home_team_code": "DEN", "away_team_code": "TUN"},
-  {"code": "WC2022:7", "home_team_code": "MEX", "away_team_code": "POL"},
-  {"code": "WC2022:8", "home_team_code": "FRA", "away_team_code": "AUS"},
-  {"code": "WC2022:9", "home_team_code": "MAR", "away_team_code": "CRO"},
-  {"code": "WC2022:10", "home_team_code": "GER", "away_team_code": "JPN"},
-  {"code": "WC2022:11", "home_team_code": "ESP", "away_team_code": "CRC"},
-  {"code": "WC2022:12", "home_team_code": "BEL", "away_team_code": "CAN"},
-  {"code": "WC2022:13", "home_team_code": "SUI", "away_team_code": "CMR"},
-  {"code": "WC2022:14", "home_team_code": "URU", "away_team_code": "KOR"},
-  {"code": "WC2022:15", "home_team_code": "POR", "away_team_code": "GHA"},
-  {"code": "WC2022:16", "home_team_code": "BRA", "away_team_code": "SRB"},
-  {"code": "WC2022:17", "home_team_code": "WAL", "away_team_code": "IR"},
-  {"code": "WC2022:18", "home_team_code": "QAT", "away_team_code": "SEN"},
-  {"code": "WC2022:19", "home_team_code": "NED", "away_team_code": "ECU"},
-  {"code": "WC2022:20", "home_team_code": "ENG", "away_team_code": "USA"},
-  {"code": "WC2022:21", "home_team_code": "TUN", "away_team_code": "AUS"},
-  {"code": "WC2022:22", "home_team_code": "POL", "away_team_code": "KSA"},
-  {"code": "WC2022:23", "home_team_code": "FRA", "away_team_code": "DEN"},
-  {"code": "WC2022:24", "home_team_code": "ARG", "away_team_code": "MEX"},
-  {"code": "WC2022:25", "home_team_code": "JPN", "away_team_code": "CRC"},
-  {"code": "WC2022:26", "home_team_code": "BEL", "away_team_code": "MAR"},
-  {"code": "WC2022:27", "home_team_code": "CRO", "away_team_code": "CAN"},
-  {"code": "WC2022:28", "home_team_code": "ESP", "away_team_code": "GER"},
-  {"code": "WC2022:29", "home_team_code": "CMR", "away_team_code": "SRB"},
-  {"code": "WC2022:30", "home_team_code": "KOR", "away_team_code": "GHA"},
-  {"code": "WC2022:31", "home_team_code": "BRA", "away_team_code": "SUI"},
-  {"code": "WC2022:32", "home_team_code": "POR", "away_team_code": "URU"},
-  {"code": "WC2022:33", "home_team_code": "ECU", "away_team_code": "SEN"},
-  {"code": "WC2022:34", "home_team_code": "NED", "away_team_code": "QAT"},
-  {"code": "WC2022:35", "home_team_code": "WAL", "away_team_code": "ENG"},
-  {"code": "WC2022:36", "home_team_code": "IR", "away_team_code": "USA"},
-  {"code": "WC2022:37", "home_team_code": "AUS", "away_team_code": "DEN"},
-  {"code": "WC2022:38", "home_team_code": "TUN", "away_team_code": "FRA"},
-  {"code": "WC2022:39", "home_team_code": "POL", "away_team_code": "ARG"},
-  {"code": "WC2022:40", "home_team_code": "KSA", "away_team_code": "MEX"},
-  {"code": "WC2022:41", "home_team_code": "CRO", "away_team_code": "BEL"},
-  {"code": "WC2022:42", "home_team_code": "CAN", "away_team_code": "MAR"},
-  {"code": "WC2022:43", "home_team_code": "JPN", "away_team_code": "ESP"},
-  {"code": "WC2022:44", "home_team_code": "CRC", "away_team_code": "GER"},
-  {"code": "WC2022:45", "home_team_code": "GHA", "away_team_code": "URU"},
-  {"code": "WC2022:46", "home_team_code": "KOR", "away_team_code": "POR"},
-  {"code": "WC2022:47", "home_team_code": "SRB", "away_team_code": "SUI"},
-  {"code": "WC2022:48", "home_team_code": "CMR", "away_team_code": "BRA"},
-  {"code": "WC2022:49"},
-  {"code": "WC2022:50"},
-  {"code": "WC2022:51"},
-  {"code": "WC2022:52"},
-  {"code": "WC2022:53"},
-  {"code": "WC2022:54"},
-  {"code": "WC2022:55"},
-  {"code": "WC2022:56"},
-  {"code": "WC2022:57"},
-  {"code": "WC2022:58"},
-  {"code": "WC2022:59"},
-  {"code": "WC2022:60"},
-  {"code": "WC2022:61"},
-  {"code": "WC2022:62"},
-  {"code": "WC2022:63"},
-  {"code": "WC2022:64"}
+  {
+    "code": "WC2022:1",
+    "home_team_code": "QAT",
+    "away_team_code": "ECU",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:2",
+    "home_team_code": "SEN",
+    "away_team_code": "NED",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:3",
+    "home_team_code": "ENG",
+    "away_team_code": "IR",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:4",
+    "home_team_code": "USA",
+    "away_team_code": "WAL",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:5",
+    "home_team_code": "ARG",
+    "away_team_code": "KSA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:6",
+    "home_team_code": "DEN",
+    "away_team_code": "TUN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:7",
+    "home_team_code": "MEX",
+    "away_team_code": "POL",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:8",
+    "home_team_code": "FRA",
+    "away_team_code": "AUS",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:9",
+    "home_team_code": "MAR",
+    "away_team_code": "CRO",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:10",
+    "home_team_code": "GER",
+    "away_team_code": "JPN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:11",
+    "home_team_code": "ESP",
+    "away_team_code": "CRC",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:12",
+    "home_team_code": "BEL",
+    "away_team_code": "CAN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:13",
+    "home_team_code": "SUI",
+    "away_team_code": "CMR",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:14",
+    "home_team_code": "URU",
+    "away_team_code": "KOR",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:15",
+    "home_team_code": "POR",
+    "away_team_code": "GHA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:16",
+    "home_team_code": "BRA",
+    "away_team_code": "SRB",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:17",
+    "home_team_code": "WAL",
+    "away_team_code": "IR",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:18",
+    "home_team_code": "QAT",
+    "away_team_code": "SEN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:19",
+    "home_team_code": "NED",
+    "away_team_code": "ECU",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:20",
+    "home_team_code": "ENG",
+    "away_team_code": "USA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:21",
+    "home_team_code": "TUN",
+    "away_team_code": "AUS",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:22",
+    "home_team_code": "POL",
+    "away_team_code": "KSA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:23",
+    "home_team_code": "FRA",
+    "away_team_code": "DEN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:24",
+    "home_team_code": "ARG",
+    "away_team_code": "MEX",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:25",
+    "home_team_code": "JPN",
+    "away_team_code": "CRC",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:26",
+    "home_team_code": "BEL",
+    "away_team_code": "MAR",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:27",
+    "home_team_code": "CRO",
+    "away_team_code": "CAN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:28",
+    "home_team_code": "ESP",
+    "away_team_code": "GER",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:29",
+    "home_team_code": "CMR",
+    "away_team_code": "SRB",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:30",
+    "home_team_code": "KOR",
+    "away_team_code": "GHA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:31",
+    "home_team_code": "BRA",
+    "away_team_code": "SUI",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:32",
+    "home_team_code": "POR",
+    "away_team_code": "URU",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:33",
+    "home_team_code": "ECU",
+    "away_team_code": "SEN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:34",
+    "home_team_code": "NED",
+    "away_team_code": "QAT",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:35",
+    "home_team_code": "WAL",
+    "away_team_code": "ENG",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:36",
+    "home_team_code": "IR",
+    "away_team_code": "USA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:37",
+    "home_team_code": "AUS",
+    "away_team_code": "DEN",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:38",
+    "home_team_code": "TUN",
+    "away_team_code": "FRA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:39",
+    "home_team_code": "POL",
+    "away_team_code": "ARG",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:40",
+    "home_team_code": "KSA",
+    "away_team_code": "MEX",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:41",
+    "home_team_code": "CRO",
+    "away_team_code": "BEL",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:42",
+    "home_team_code": "CAN",
+    "away_team_code": "MAR",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:43",
+    "home_team_code": "JPN",
+    "away_team_code": "ESP",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:44",
+    "home_team_code": "CRC",
+    "away_team_code": "GER",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:45",
+    "home_team_code": "GHA",
+    "away_team_code": "URU",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:46",
+    "home_team_code": "KOR",
+    "away_team_code": "POR",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:47",
+    "home_team_code": "SRB",
+    "away_team_code": "SUI",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:48",
+    "home_team_code": "CMR",
+    "away_team_code": "BRA",
+    "stage": "group"
+  },
+  {
+    "code": "WC2022:49",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:50",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:51",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:52",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:53",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:54",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:55",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:56",
+    "stage": "eigth"
+  },
+  {
+    "code": "WC2022:57",
+    "stage": "quarter"
+  },
+  {
+    "code": "WC2022:58",
+    "stage": "quarter"
+  },
+  {
+    "code": "WC2022:59",
+    "stage": "quarter"
+  },
+  {
+    "code": "WC2022:60",
+    "stage": "quarter"
+  },
+  {
+    "code": "WC2022:61",
+    "stage": "semi"
+  },
+  {
+    "code": "WC2022:62",
+    "stage": "semi"
+  },
+  {
+    "code": "WC2022:63",
+    "stage": "third"
+  },
+  {
+    "code": "WC2022:64",
+    "stage": "final"
+  }
 ]

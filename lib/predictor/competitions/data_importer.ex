@@ -61,11 +61,16 @@ defmodule Predictor.Competitions.DataImporter do
   end
 
   defp prepare_match_attrs(
-         %{code: code, home_team_code: home_team_code, away_team_code: away_team_code},
+         %{
+           code: code,
+           stage: stage,
+           home_team_code: home_team_code,
+           away_team_code: away_team_code
+         },
          competition,
          timestamp
        ) do
-    %{code: code}
+    %{code: code, stage: String.to_existing_atom(stage)}
     |> Map.merge(@match_default_attrs)
     |> Map.merge(%{
       home_team_id: Teams.get_team_by_code!(home_team_code).id,
@@ -76,11 +81,11 @@ defmodule Predictor.Competitions.DataImporter do
   end
 
   defp prepare_match_attrs(
-         %{code: code},
+         %{code: code, stage: stage},
          competition,
          timestamp
        ) do
-    %{code: code}
+    %{code: code, stage: String.to_existing_atom(stage)}
     |> Map.merge(@match_default_attrs)
     |> Map.merge(%{
       competition_id: competition.id,

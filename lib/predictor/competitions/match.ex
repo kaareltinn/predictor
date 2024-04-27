@@ -9,6 +9,7 @@ defmodule Predictor.Competitions.Match do
   schema "matches" do
     field :code, :string
     field :status, Ecto.Enum, values: [:scheduled, :in_progress, :finished], default: :scheduled
+    field :stage, Ecto.Enum, values: [:group, :eigth, :quarter, :semi, :third, :final]
     field :home_goals, :integer
     field :away_goals, :integer
     field :home_penaltis, :integer
@@ -35,7 +36,8 @@ defmodule Predictor.Competitions.Match do
       :home_penaltis,
       :away_penalties,
       :kickoff_at,
-      :status
+      :status,
+      :stage
     ])
     |> put_assoc(:competition, attrs[:competition])
     |> put_assoc(:home_team, attrs[:home_team])
@@ -47,7 +49,8 @@ defmodule Predictor.Competitions.Match do
       :home_penaltis,
       :away_penalties,
       :kickoff_at,
-      :status
+      :status,
+      :stage
     ])
     |> unique_constraint(:code)
   end
@@ -61,7 +64,8 @@ defmodule Predictor.Competitions.Match do
       :home_penaltis,
       :away_penalties,
       :kickoff_at,
-      :status
+      :status,
+      :stage
     ])
     |> validate_required([
       :code,
@@ -70,7 +74,8 @@ defmodule Predictor.Competitions.Match do
       :home_penaltis,
       :away_penalties,
       :kickoff_at,
-      :status
+      :status,
+      :stage
     ])
     |> unique_constraint(:code)
   end
