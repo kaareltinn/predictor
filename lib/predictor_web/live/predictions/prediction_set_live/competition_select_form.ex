@@ -66,7 +66,6 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.CompetitionSelectForm do
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        dbg(to_form(changeset))
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end

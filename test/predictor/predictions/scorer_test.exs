@@ -8,8 +8,6 @@ defmodule Predictor.Predictions.ScorerTest do
   alias Predictor.Predictions.Scorer
   alias Predictor.Predictions
   alias Predictor.Competitions
-  alias Predictor.Competitions.Match
-  alias Predictor.Teams
 
   setup :setup_user_and_competition
   setup :setup_teams
@@ -119,9 +117,5 @@ defmodule Predictor.Predictions.ScorerTest do
   defp get_match(matches, code) do
     [match] = matches[code]
     match
-  end
-
-  defp get_team(teams, code) do
-    Enum.find(teams, fn team -> team.code == code end)
   end
 end

@@ -61,7 +61,7 @@ defmodule Predictor.Competitions.DataImporter do
   end
 
   defp prepare_match_attrs(
-         %{code: code, home_team_code: home_team_code, away_team_code: away_team_code} = attrs,
+         %{code: code, home_team_code: home_team_code, away_team_code: away_team_code},
          competition,
          timestamp
        ) do
