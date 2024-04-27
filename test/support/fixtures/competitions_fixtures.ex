@@ -31,7 +31,8 @@ defmodule Predictor.CompetitionsFixtures do
         home_goals: 0,
         home_penaltis: 0,
         kickoff_at: ~U[2024-02-28 21:58:00Z],
-        status: "scheduled"
+        status: "scheduled",
+        stage: "group"
       })
       |> Predictor.Competitions.create_match()
 

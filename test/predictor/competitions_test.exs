@@ -141,6 +141,7 @@ defmodule Predictor.CompetitionsTest do
       valid_attrs = %{
         code: "some code",
         status: "scheduled",
+        stage: "group",
         home_team: home_team,
         away_team: away_team,
         competition: competition,
@@ -154,6 +155,7 @@ defmodule Predictor.CompetitionsTest do
       assert {:ok, %Match{} = match} = Competitions.create_match(valid_attrs)
       assert match.code == "some code"
       assert match.status == :scheduled
+      assert match.stage == :group
       assert match.competition == competition
       assert match.home_team == home_team
       assert match.away_team == away_team
@@ -168,6 +170,7 @@ defmodule Predictor.CompetitionsTest do
       invalid_attrs = %{
         code: String.downcase(match.code),
         status: "scheduled",
+        stage: "group",
         home_team: team_fixture(),
         away_team: team_fixture(),
         competition: match.competition,
