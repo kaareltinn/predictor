@@ -188,6 +188,17 @@ defmodule Predictor.Predictions do
     |> Repo.update()
   end
 
+  def add_prediction(%PredictionSet{} = prediction_set, attrs) do
+    attrs =
+      attrs
+      |> Map.put(:prediction_set, prediction_set)
+      |> Map.put(:user, prediction_set.user)
+
+    create_prediction(attrs)
+
+    prediction_set
+  end
+
   @doc """
   Deletes a prediction_set.
 

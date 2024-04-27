@@ -1,0 +1,162 @@
+[
+    {
+        "code": "QAT",
+        "name": "Qatar",
+        "type": "national"
+    },
+    {
+        "code": "ECU",
+        "name": "Ecuador",
+        "type": "national"
+    },
+    {
+        "code": "SEN",
+        "name": "Senegal",
+        "type": "national"
+    },
+    {
+        "code": "NED",
+        "name": "Netherlands",
+        "type": "national"
+    },
+    {
+        "code": "ENG",
+        "name": "England",
+        "type": "national"
+    },
+    {
+        "code": "IR",
+        "name": "IR Iran",
+        "type": "national"
+    },
+    {
+        "code": "USA",
+        "name": "USA",
+        "type": "national"
+    },
+    {
+        "code": "WAL",
+        "name": "Wales",
+        "type": "national"
+    },
+    {
+        "code": "ARG",
+        "name": "Argentina",
+        "type": "national"
+    },
+    {
+        "code": "KSA",
+        "name": "Saudi Arabia",
+        "type": "national"
+    },
+    {
+        "code": "MEX",
+        "name": "Mexico",
+        "type": "national"
+    },
+    {
+        "code": "POL",
+        "name": "Poland",
+        "type": "national"
+    },
+    {
+        "code": "FRA",
+        "name": "France",
+        "type": "national"
+    },
+    {
+        "code": "AUS",
+        "name": "Australia",
+        "type": "national"
+    },
+    {
+        "code": "DEN",
+        "name": "Denmark",
+        "type": "national"
+    },
+    {
+        "code": "TUN",
+        "name": "Tunisia",
+        "type": "national"
+    },
+    {
+        "code": "ESP",
+        "name": "Spain",
+        "type": "national"
+    },
+    {
+        "code": "CRC",
+        "name": "Costa Rica",
+        "type": "national"
+    },
+    {
+        "code": "GER",
+        "name": "Germany",
+        "type": "national"
+    },
+    {
+        "code": "JPN",
+        "name": "Japan",
+        "type": "national"
+    },
+    {
+        "code": "BEL",
+        "name": "Belgium",
+        "type": "national"
+    },
+    {
+        "code": "CAN",
+        "name": "Canada",
+        "type": "national"
+    },
+    {
+        "code": "MAR",
+        "name": "Morocco",
+        "type": "national"
+    },
+    {
+        "code": "CRO",
+        "name": "Croatia",
+        "type": "national"
+    },
+    {
+        "code": "BRA",
+        "name": "Brazil",
+        "type": "national"
+    },
+    {
+        "code": "SRB",
+        "name": "Serbia",
+        "type": "national"
+    },
+    {
+        "code": "SUI",
+        "name": "Switzerland",
+        "type": "national"
+    },
+    {
+        "code": "CMR",
+        "name": "Cameroon",
+        "type": "national"
+    },
+    {
+        "code": "POR",
+        "name": "Portugal",
+        "type": "national"
+    },
+    {
+        "code": "GHA",
+        "name": "Ghana",
+        "type": "national"
+    },
+    {
+        "code": "URU",
+        "name": "Uruguay",
+        "type": "national"
+    },
+    {
+        "code": "KOR",
+        "name": "Korea Republic",
+        "type": "national"
+    }
+]
