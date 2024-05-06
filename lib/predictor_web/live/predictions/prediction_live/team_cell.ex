@@ -57,14 +57,4 @@ defmodule PredictorWeb.Predictions.PredictionLive.TeamCell do
     </span>
     """
   end
-
-  def update_many(assigns_sockets) do
-    teams = Competitions.list_competition_teams(18)
-
-    Enum.map(assigns_sockets, fn {assigns, socket} ->
-      socket
-      |> assign(assigns)
-      |> assign(:teams, teams)
-    end)
-  end
 end

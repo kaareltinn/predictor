@@ -21,9 +21,13 @@ defmodule PredictorWeb.Predictions.PredictionLive.Index do
     matches =
       Competitions.list_matches_with_predictions(prediction_set_id)
 
+    teams =
+      Competitions.list_competition_teams(competition_id)
+
     {:ok,
      socket
      |> assign(:competition, competition)
+     |> assign(:teams, teams)
      |> assign(:prediction_set, prediction_set)
      |> assign(:matches_by_id, matches_by_id(matches))
      |> assign(:match_ids, match_ids(matches))
