@@ -26,7 +26,7 @@ defmodule Predictor.Predictions.ScorerTest do
     } do
       prediction_set
       |> Predictions.add_prediction(%{
-        match: get_match(matches, "WC2022:1"),
+        match_id: get_match(matches, "WC2022:1").id,
         home_goals: 1,
         away_goals: 0
       })
@@ -35,7 +35,7 @@ defmodule Predictor.Predictions.ScorerTest do
       assert Scorer.score(matches) == 0
     end
 
-    test "scoring when single prediction with finished match", %{
+    test "scoring when single prediction with finished group stage match", %{
       prediction_set: prediction_set,
       matches_by_code: matches
     } do
@@ -43,7 +43,7 @@ defmodule Predictor.Predictions.ScorerTest do
 
       prediction_set
       |> Predictions.add_prediction(%{
-        match: match,
+        match_id: match.id,
         home_goals: 1,
         away_goals: 0
       })
@@ -52,6 +52,239 @@ defmodule Predictor.Predictions.ScorerTest do
 
       matches = Competitions.list_matches_with_predictions(prediction_set.id)
       assert Scorer.score(matches) == 10
+    end
+
+    test "scoring prediction with finished 1/8 stage match (both teams correct)", %{
+      prediction_set: prediction_set,
+      matches_by_code: matches,
+      teams: teams
+    } do
+      match = get_match(matches, "WC2022:49")
+
+      prediction_set
+      |> Predictions.add_prediction(%{
+        match_id: match.id,
+        home_team_id: get_team(teams, "BRA").id,
+        away_team_id: get_team(teams, "GER").id
+      })
+
+      Competitions.update_match(match, %{
+        status: :finished,
+        home_team_id: get_team(teams, "BRA").id,
+        away_team_id: get_team(teams, "GER").id
+      })
+
+      matches = Competitions.list_matches_with_predictions(prediction_set.id)
+      assert Scorer.score(matches) == 30
+    end
+
+    test "scoring prediction with finished 1/8 stage match (one team correct, another wrong spot)",
+         %{
+           prediction_set: prediction_set,
+           matches_by_code: matches,
+           teams: teams
+         } do
+      match1 = get_match(matches, "WC2022:49")
+      match2 = get_match(matches, "WC2022:50")
+
+      prediction_set
+      |> Predictions.add_prediction(%{
+        match_id: match1.id,
+        home_team_id: get_team(teams, "BRA").id,
+        away_team_id: get_team(teams, "GER").id
+      })
+      |> Predictions.add_prediction(%{
+        match_id: match2.id,
+        home_team_id: get_team(teams, "NED").id,
+        away_team_id: get_team(teams, "POR").id
+      })
+
+      Competitions.update_match(match1, %{
+        status: :finished,
+        # 15
+        home_team_id: get_team(teams, "BRA").id,
+        # 10
+        away_team_id: get_team(teams, "NED").id
+      })
+
+      Competitions.update_match(match2, %{
+        status: :finished,
+        # 10
+        home_team_id: get_team(teams, "POR").id,
+        # 0
+        away_team_id: get_team(teams, "ENG").id
+      })
+
+      matches = Competitions.list_matches_with_predictions(prediction_set.id)
+      assert Scorer.score(matches) == 35
+    end
+
+    test "scoring prediction with finished 1/4 stage matches",
+         %{
+           prediction_set: prediction_set,
+           matches_by_code: matches,
+           teams: teams
+         } do
+      match1 = get_match(matches, "WC2022:57")
+      match2 = get_match(matches, "WC2022:58")
+      match3 = get_match(matches, "WC2022:59")
+      match4 = get_match(matches, "WC2022:60")
+
+      prediction_set
+      |> Predictions.add_prediction(%{
+        match_id: match1.id,
+        # 15
+        home_team_id: get_team(teams, "BRA").id,
+        # 15
+        away_team_id: get_team(teams, "GER").id
+      })
+      |> Predictions.add_prediction(%{
+        match_id: match2.id,
+        # 0
+        home_team_id: get_team(teams, "NED").id,
+        # 0
+        away_team_id: get_team(teams, "POR").id
+      })
+      |> Predictions.add_prediction(%{
+        match_id: match3.id,
+        # 15
+        home_team_id: get_team(teams, "ESP").id,
+        # 20
+        away_team_id: get_team(teams, "ENG").id
+      })
+      |> Predictions.add_prediction(%{
+        match_id: match4.id,
+        # 15
+        home_team_id: get_team(teams, "FRA").id,
+        # 0
+        away_team_id: get_team(teams, "ESP").id
+      })
+
+      Competitions.update_match(match1, %{
+        status: :finished,
+        home_team_id: get_team(teams, "GER").id,
+        away_team_id: get_team(teams, "BRA").id
+      })
+
+      Competitions.update_match(match2, %{
+        status: :finished,
+        home_team_id: get_team(teams, "ESP").id,
+        away_team_id: get_team(teams, "FRA").id
+      })
+
+      Competitions.update_match(match3, %{
+        status: :finished,
+        home_team_id: get_team(teams, "URU").id,
+        away_team_id: get_team(teams, "ENG").id
+      })
+
+      Competitions.update_match(match4, %{
+        status: :finished,
+        home_team_id: get_team(teams, "URU").id,
+        away_team_id: get_team(teams, "CRO").id
+      })
+
+      matches = Competitions.list_matches_with_predictions(prediction_set.id)
+      assert Scorer.score(matches) == 80
+    end
+
+    test "scoring prediction with finished 1/2 stage matches",
+         %{
+           prediction_set: prediction_set,
+           matches_by_code: matches,
+           teams: teams
+         } do
+      match1 = get_match(matches, "WC2022:61")
+      match2 = get_match(matches, "WC2022:62")
+
+      prediction_set
+      |> Predictions.add_prediction(%{
+        match_id: match1.id,
+        # 25
+        home_team_id: get_team(teams, "FRA").id,
+        # 20
+        away_team_id: get_team(teams, "GER").id
+      })
+      |> Predictions.add_prediction(%{
+        match_id: match2.id,
+        # 20
+        home_team_id: get_team(teams, "ARG").id,
+        # 0
+        away_team_id: get_team(teams, "POR").id
+      })
+
+      Competitions.update_match(match1, %{
+        status: :finished,
+        home_team_id: get_team(teams, "FRA").id,
+        away_team_id: get_team(teams, "ENG").id
+      })
+
+      Competitions.update_match(match2, %{
+        status: :finished,
+        home_team_id: get_team(teams, "GER").id,
+        away_team_id: get_team(teams, "ARG").id
+      })
+
+      matches = Competitions.list_matches_with_predictions(prediction_set.id)
+      assert Scorer.score(matches) == 65
+    end
+
+    test "scoring prediction with finished third place match",
+         %{
+           prediction_set: prediction_set,
+           matches_by_code: matches,
+           teams: teams
+         } do
+      match1 = get_match(matches, "WC2022:63")
+
+      prediction_set
+      |> Predictions.add_prediction(%{
+        match_id: match1.id,
+        home_team_id: get_team(teams, "FRA").id,
+        away_team_id: get_team(teams, "POR").id,
+        home_goals: 3,
+        away_goals: 1
+      })
+
+      Competitions.update_match(match1, %{
+        status: :finished,
+        home_team_id: get_team(teams, "FRA").id,
+        away_team_id: get_team(teams, "ENG").id,
+        home_goals: 2,
+        away_goals: 1
+      })
+
+      matches = Competitions.list_matches_with_predictions(prediction_set.id)
+      assert Scorer.score(matches) == 26 + 30
+    end
+
+    test "scoring prediction with finished final place match",
+         %{
+           prediction_set: prediction_set,
+           matches_by_code: matches,
+           teams: teams
+         } do
+      match1 = get_match(matches, "WC2022:64")
+
+      prediction_set
+      |> Predictions.add_prediction(%{
+        match_id: match1.id,
+        home_team_id: get_team(teams, "FRA").id,
+        away_team_id: get_team(teams, "POR").id,
+        home_goals: 3,
+        away_goals: 1
+      })
+
+      Competitions.update_match(match1, %{
+        status: :finished,
+        home_team_id: get_team(teams, "FRA").id,
+        away_team_id: get_team(teams, "ENG").id,
+        home_goals: 2,
+        away_goals: 1
+      })
+
+      matches = Competitions.list_matches_with_predictions(prediction_set.id)
+      assert Scorer.score(matches) == 30 + 40
     end
 
     test "scoring when multiple predictions and results", %{
@@ -64,10 +297,10 @@ defmodule Predictor.Predictions.ScorerTest do
       match4 = get_match(matches, "WC2022:4")
 
       prediction_set
-      |> Predictions.add_prediction(%{match: match1, home_goals: 2, away_goals: 1})
-      |> Predictions.add_prediction(%{match: match2, home_goals: 1, away_goals: 2})
-      |> Predictions.add_prediction(%{match: match3, home_goals: 1, away_goals: 1})
-      |> Predictions.add_prediction(%{match: match4, home_goals: 1, away_goals: 0})
+      |> Predictions.add_prediction(%{match_id: match1.id, home_goals: 2, away_goals: 1})
+      |> Predictions.add_prediction(%{match_id: match2.id, home_goals: 1, away_goals: 2})
+      |> Predictions.add_prediction(%{match_id: match3.id, home_goals: 1, away_goals: 1})
+      |> Predictions.add_prediction(%{match_id: match4.id, home_goals: 1, away_goals: 0})
 
       match1
       # 8
@@ -117,5 +350,9 @@ defmodule Predictor.Predictions.ScorerTest do
   defp get_match(matches, code) do
     [match] = matches[code]
     match
+  end
+
+  defp get_team(teams, team_code) do
+    Enum.find(teams, fn team -> team.code == team_code end)
   end
 end

@@ -63,6 +63,8 @@ defmodule Predictor.Competitions.Match do
       :away_goals,
       :home_penaltis,
       :away_penalties,
+      :home_team_id,
+      :away_team_id,
       :kickoff_at,
       :status,
       :stage

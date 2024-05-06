@@ -191,10 +191,10 @@ defmodule Predictor.Predictions do
   def add_prediction(%PredictionSet{} = prediction_set, attrs) do
     attrs =
       attrs
-      |> Map.put(:prediction_set, prediction_set)
-      |> Map.put(:user, prediction_set.user)
+      |> Map.put(:prediction_set_id, prediction_set.id)
+      |> Map.put(:user_id, prediction_set.user.id)
 
-    create_prediction(attrs)
+    {:ok, _prediction} = create_prediction(attrs)
 
     prediction_set
   end

@@ -8,8 +8,8 @@ defmodule Predictor.Predictions.Prediction do
   alias Predictor.Predictions.PredictionSet
 
   schema "predictions" do
-    field :home_goals, :integer
-    field :away_goals, :integer
+    field :home_goals, :integer, default: 0
+    field :away_goals, :integer, default: 0
     field :home_penaltis, :integer, default: 0
     field :away_penalties, :integer, default: 0
     belongs_to :user, User
@@ -48,6 +48,6 @@ defmodule Predictor.Predictions.Prediction do
       :home_team_id,
       :away_team_id
     ])
-    |> validate_required([:home_goals, :away_goals, :user_id, :match_id, :prediction_set_id])
+    |> validate_required([:user_id, :match_id, :prediction_set_id])
   end
 end

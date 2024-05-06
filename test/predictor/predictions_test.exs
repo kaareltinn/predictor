@@ -11,7 +11,7 @@ defmodule Predictor.PredictionsTest do
   describe "predictions" do
     alias Predictor.Predictions.Prediction
 
-    @invalid_attrs %{home_goals: nil, away_goals: nil, home_penaltis: nil, away_penalties: nil}
+    @invalid_attrs %{user_id: nil, match_id: nil, prediction_set_id: nil}
 
     setup :setup_user_and_competition
 
