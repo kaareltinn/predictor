@@ -10,9 +10,17 @@ defmodule PredictorWeb.Predictions.PredictionLive.TeamCell do
 
   def render(%{team: %Team{}} = assigns) do
     ~H"""
-    <span>
+    <div class="flex items-center space-x-2">
+      <%= if assigns.type == :home_team do %>
+        <Flagpack.flag name={alpha_3_country_code(@team.code)} class="m-2 w-8 h-8" />
+      <% end %>
+
       <%= @team.name %>
-    </span>
+
+      <%= if assigns.type == :away_team do %>
+        <Flagpack.flag name={alpha_3_country_code(@team.code)} class="m-2 w-8 h-8" />
+      <% end %>
+    </div>
     """
   end
 
@@ -56,5 +64,25 @@ defmodule PredictorWeb.Predictions.PredictionLive.TeamCell do
       />
     </span>
     """
+  end
+
+  defp alpha_3_country_code(code) do
+    %{
+      "NED" => :nld,
+      "ENG" => :gb_eng,
+      "IR" => :irl,
+      "WAL" => :gb_wls,
+      "KSA" => :sau,
+      "DEN" => :dnk,
+      "CRO" => :hrv,
+      "GER" => :deu,
+      "CRC" => :cri,
+      "SUI" => :che,
+      "URU" => :ury,
+      "POR" => :prt
+    }[code] ||
+      code
+      |> String.downcase()
+      |> String.to_atom()
   end
 end

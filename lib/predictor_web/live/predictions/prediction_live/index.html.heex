@@ -39,30 +39,23 @@
   </:col>
 
   <:col :let={m}>
-    <%= if m.user_prediction do %>
-      <.input field={@form[:home_goals]} value={m.user_prediction.home_goals} form={"prediction-form-#{m.id}"} />
-    <% else %>
-      <.input field={@form[:home_goals]} form={"prediction-form-#{m.id}"} />
-    <% end %>
+    <.input
+      field={@form[:home_goals]}
+      value={if m.user_prediction, do: m.user_prediction.home_goals}
+      form={"prediction-form-#{m.id}"}
+      errors={@form.errors}
+    />
   </:col>
 
   <:col :let={_} >:</:col>
 
   <:col :let={m}>
-    <%= if m.user_prediction do %>
       <.input
         field={@form[:away_goals]}
-        value={m.user_prediction.away_goals}
+        value={if m.user_prediction, do: m.user_prediction.away_goals}
         form={"prediction-form-#{m.id}"}
         errors={@form.errors}
       />
-      <% else %>
-        <.input
-        field={@form[:away_goals]}
-        form={"prediction-form-#{m.id}"}
-        errors={@form.errors}
-        />
-      <% end %>
   </:col>
 
   <:col :let={m} label="Away team" bold>
