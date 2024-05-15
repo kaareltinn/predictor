@@ -12,7 +12,7 @@ defmodule PredictorWeb.Predictions.PredictionLive.FormComponent do
           id={"prediction-form-#{match_id}"}
           for={@form}
           phx-target={@myself}
-          phx-submit="save"
+          phx-change="save"
           phx-update="ignore"
         >
         </.simple_form>

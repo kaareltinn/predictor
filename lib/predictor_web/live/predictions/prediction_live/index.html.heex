@@ -7,72 +7,74 @@
   prediction_set={@prediction_set}
 />
 
-<.table id="predictions" rows={Enum.map(@match_ids, fn id -> @matches_by_id[id] end)}>
-  <:col :let={m}>
-    <%= if m.user_prediction do %>
-      <.input field={@form[:id]} value={m.user_prediction.id} type="hidden" form={"prediction-form-#{m.id}"} />
-    <% end %>
-  </:col>
+<%= for m <- Enum.map(@match_ids, fn id -> @matches_by_id[id] end) do %>
+  <%= if m.user_prediction do %>
+    <.input field={@form[:id]} value={m.user_prediction.id} type="hidden" form={"prediction-form-#{m.id}"} />
+  <% end %>
 
-  <:col :let={m}>
-    <.input field={@form[:match_id]} value={m.id} type="hidden" form={"prediction-form-#{m.id}"} />
-  </:col>
+  <.input field={@form[:match_id]} value={m.id} type="hidden" form={"prediction-form-#{m.id}"} />
 
-  <:col :let={m}>
-    <%= if m.user_prediction do %>
-      <.input name="form_action" value={"edit"} type="hidden" form={"prediction-form-#{m.id}"} />
-    <% else %>
-      <.input name="form_action" value={"add"} type="hidden" form={"prediction-form-#{m.id}"} />
-    <% end %>
-  </:col>
+  <%= if m.user_prediction do %>
+    <.input name="form_action" value={"edit"} type="hidden" form={"prediction-form-#{m.id}"} />
+  <% else %>
+    <.input name="form_action" value={"add"} type="hidden" form={"prediction-form-#{m.id}"} />
+  <% end %>
 
-  <:col :let={m} label="Home team" bold>
-    <.live_component
-      module={TeamCell}
-      id={"#{m.id}-home-team-cell"}
-      type={:home_team}
-      field={@form[:home_team_id]}
-      match={m}
-      team={m.home_team}
-      teams={@teams}
-    />
-  </:col>
-
-  <:col :let={m}>
-    <.input
-      field={@form[:home_goals]}
-      value={if m.user_prediction, do: m.user_prediction.home_goals}
-      form={"prediction-form-#{m.id}"}
-      errors={@form.errors}
-    />
-  </:col>
-
-  <:col :let={_} >:</:col>
-
-  <:col :let={m}>
-      <.input
-        field={@form[:away_goals]}
-        value={if m.user_prediction, do: m.user_prediction.away_goals}
-        form={"prediction-form-#{m.id}"}
-        errors={@form.errors}
-      />
-  </:col>
-
-  <:col :let={m} label="Away team" bold>
-    <.live_component
-      module={TeamCell}
-      id={"#{m.id}-away-team-cell"}
-      type={:away_team}
-      field={@form[:away_team_id]}
-      match={m}
-      team={m.away_team}
-      teams={@teams}
-    />
-  </:col>
-
-  <:action :let={m}>
-    <.button phx-disable-with="Saving..." form={"prediction-form-#{m.id}"}>
-      Save
-    </.button>
-  </:action>
-</.table>
+  <div class="p-4 m-4 rounded-lg shadow">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-md text-gray-600"><%= String.capitalize(Atom.to_string(m.stage)) %></span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="text-md text-gray-600">May 13, 2024</span>
+      </div>
+    </div>
+    <div class="flex flex-row justify-between">
+      <div class="pr-2">
+        <.live_component
+          module={TeamCell}
+          id={"#{m.id}-home-team-cell"}
+          type={:home_team}
+          field={@form[:home_team_id]}
+          match={m}
+          team={m.home_team}
+          teams={@teams}
+        />
+      </div>
+      <div class="flex flex-none items-center space-x-2">
+        <div class="w-16">
+          <.input
+            type="number"
+            min="0"
+            field={@form[:home_goals]}
+            value={if m.user_prediction, do: m.user_prediction.home_goals, else: 0}
+            form={"prediction-form-#{m.id}"}
+            errors={@form.errors}
+          />
+        </div>
+        <span class="text-xl">:</span>
+        <div class="w-16">
+          <.input
+            type="number"
+            min="0"
+            field={@form[:away_goals]}
+            value={if m.user_prediction, do: m.user_prediction.away_goals, else: 0}
+            form={"prediction-form-#{m.id}"}
+            errors={@form.errors}
+          />
+        </div>
+      </div>
+      <div class="pl-2">
+        <.live_component
+          module={TeamCell}
+          id={"#{m.id}-away-team-cell"}
+          type={:away_team}
+          field={@form[:away_team_id]}
+          match={m}
+          team={m.away_team}
+          teams={@teams}
+        />
+      </div>
+    </div>
+  </div>
+<% end %>

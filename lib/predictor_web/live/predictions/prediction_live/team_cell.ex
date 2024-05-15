@@ -3,22 +3,25 @@ defmodule PredictorWeb.Predictions.PredictionLive.TeamCell do
 
   import PredictorWeb.CoreComponents
 
-  alias Predictor.Competitions
   alias Predictor.Competitions.Match
   alias Predictor.Predictions.Prediction
   alias Predictor.Teams.Team
 
   def render(%{team: %Team{}} = assigns) do
+    assigns = assign(assigns, :name, alpha_3_country_code(assigns.team.code))
+
     ~H"""
     <div class="flex items-center space-x-2">
       <%= if assigns.type == :home_team do %>
-        <Flagpack.flag name={alpha_3_country_code(@team.code)} class="m-2 w-8 h-8" />
+        <Flagpack.flag name={@name} class="m-2 w-8 h-8" />
       <% end %>
 
-      <%= @team.name %>
+      <span class="font-bold max-sm:hidden">
+        <%= @team.code %>
+      </span>
 
       <%= if assigns.type == :away_team do %>
-        <Flagpack.flag name={alpha_3_country_code(@team.code)} class="m-2 w-8 h-8" />
+        <Flagpack.flag name={@name} class="m-2 w-8 h-8" />
       <% end %>
     </div>
     """
@@ -32,7 +35,7 @@ defmodule PredictorWeb.Predictions.PredictionLive.TeamCell do
         field={@field}
         value={nil}
         form={"prediction-form-#{@match.id}"}
-        options={[{"---", nil} | Enum.map(@teams, &{&1.name, &1.id})]}
+        options={team_options(@teams)}
       />
     </span>
     """
@@ -46,7 +49,7 @@ defmodule PredictorWeb.Predictions.PredictionLive.TeamCell do
         field={@field}
         value={@match.user_prediction.home_team_id}
         form={"prediction-form-#{@match.id}"}
-        options={[{"---", nil} | Enum.map(@teams, &{&1.name, &1.id})]}
+        options={team_options(@teams)}
       />
     </span>
     """
@@ -60,10 +63,14 @@ defmodule PredictorWeb.Predictions.PredictionLive.TeamCell do
         field={@field}
         value={@match.user_prediction.away_team_id}
         form={"prediction-form-#{@match.id}"}
-        options={[{"---", nil} | Enum.map(@teams, &{&1.name, &1.id})]}
+        options={team_options(@teams)}
       />
     </span>
     """
+  end
+
+  defp team_options(teams) do
+    [{"---", nil} | Enum.map(teams, &{&1.name, &1.id})]
   end
 
   defp alpha_3_country_code(code) do
