@@ -2,14 +2,22 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.Index do
   use PredictorWeb, :live_view
 
   alias Predictor.Predictions
+  alias Predictor.Predictions.Scorer
+  alias Predictor.Competitions
 
   def mount(_params, _session, socket) do
     prediction_sets = Predictions.list_user_prediction_sets(socket.assigns.current_user.id)
+
+    matches_by_prediction_set_id =
+      prediction_sets
+      |> Enum.map(& &1.id)
+      |> Map.new(fn id -> {id, Competitions.list_matches_with_predictions(id)} end)
 
     {
       :ok,
       socket
       |> assign(:prediction_sets, prediction_sets)
+      |> assign(:matches_by_prediction_set_id, matches_by_prediction_set_id)
     }
   end
 
@@ -40,6 +48,10 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.Index do
         </:col>
         <:col :let={ps} label="Competition">
           <%= ps.competition.name %>
+        </:col>
+
+        <:col :let={ps} label="Score">
+          <%= Scorer.score(@matches_by_prediction_set_id[ps.id]) %>
         </:col>
       </.table>
     </div>
