@@ -173,6 +173,38 @@ ALTER SEQUENCE public.prediction_sets_id_seq OWNED BY public.prediction_sets.id;
 
 
 --
+-- Name: prediction_sets_leagues; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.prediction_sets_leagues (
+    id bigint NOT NULL,
+    prediction_set_id bigint NOT NULL,
+    league_id bigint NOT NULL,
+    inserted_at timestamp(0) without time zone NOT NULL,
+    updated_at timestamp(0) without time zone NOT NULL
+);
+
+
+--
+-- Name: prediction_sets_leagues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.prediction_sets_leagues_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: prediction_sets_leagues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.prediction_sets_leagues_id_seq OWNED BY public.prediction_sets_leagues.id;
+
+
+--
 -- Name: predictions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -349,6 +381,13 @@ ALTER TABLE ONLY public.prediction_sets ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: prediction_sets_leagues id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets_leagues ALTER COLUMN id SET DEFAULT nextval('public.prediction_sets_leagues_id_seq'::regclass);
+
+
+--
 -- Name: predictions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -398,6 +437,14 @@ ALTER TABLE ONLY public.leagues
 
 ALTER TABLE ONLY public.matches
     ADD CONSTRAINT matches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: prediction_sets_leagues prediction_sets_leagues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets_leagues
+    ADD CONSTRAINT prediction_sets_leagues_pkey PRIMARY KEY (id);
 
 
 --
@@ -498,6 +545,13 @@ CREATE INDEX prediction_sets_competition_id_index ON public.prediction_sets USIN
 
 
 --
+-- Name: prediction_sets_leagues_prediction_set_id_league_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX prediction_sets_leagues_prediction_set_id_league_id_index ON public.prediction_sets_leagues USING btree (prediction_set_id, league_id);
+
+
+--
 -- Name: prediction_sets_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -587,6 +641,22 @@ ALTER TABLE ONLY public.prediction_sets
 
 
 --
+-- Name: prediction_sets_leagues prediction_sets_leagues_league_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets_leagues
+    ADD CONSTRAINT prediction_sets_leagues_league_id_fkey FOREIGN KEY (league_id) REFERENCES public.leagues(id) ON DELETE CASCADE;
+
+
+--
+-- Name: prediction_sets_leagues prediction_sets_leagues_prediction_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prediction_sets_leagues
+    ADD CONSTRAINT prediction_sets_leagues_prediction_set_id_fkey FOREIGN KEY (prediction_set_id) REFERENCES public.prediction_sets(id) ON DELETE CASCADE;
+
+
+--
 -- Name: prediction_sets prediction_sets_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -660,3 +730,4 @@ INSERT INTO public."schema_migrations" (version) VALUES (20240412194205);
 INSERT INTO public."schema_migrations" (version) VALUES (20240427060457);
 INSERT INTO public."schema_migrations" (version) VALUES (20240427131520);
 INSERT INTO public."schema_migrations" (version) VALUES (20240516074203);
+INSERT INTO public."schema_migrations" (version) VALUES (20240520201623);
