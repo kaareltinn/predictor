@@ -66,6 +66,39 @@ ALTER SEQUENCE public.competitions_id_seq OWNED BY public.competitions.id;
 
 
 --
+-- Name: leagues; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.leagues (
+    id bigint NOT NULL,
+    entry_code character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    competition_id bigint,
+    inserted_at timestamp(0) without time zone NOT NULL,
+    updated_at timestamp(0) without time zone NOT NULL
+);
+
+
+--
+-- Name: leagues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.leagues_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: leagues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.leagues_id_seq OWNED BY public.leagues.id;
+
+
+--
 -- Name: matches; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -82,7 +115,8 @@ CREATE TABLE public.matches (
     competition_id bigint NOT NULL,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL,
-    code public.citext NOT NULL
+    code public.citext NOT NULL,
+    stage character varying(255) NOT NULL
 );
 
 
@@ -294,6 +328,13 @@ ALTER TABLE ONLY public.competitions ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: leagues id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.leagues ALTER COLUMN id SET DEFAULT nextval('public.leagues_id_seq'::regclass);
+
+
+--
 -- Name: matches id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -341,6 +382,14 @@ ALTER TABLE ONLY public.users_tokens ALTER COLUMN id SET DEFAULT nextval('public
 
 ALTER TABLE ONLY public.competitions
     ADD CONSTRAINT competitions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: leagues leagues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.leagues
+    ADD CONSTRAINT leagues_pkey PRIMARY KEY (id);
 
 
 --
@@ -397,6 +446,20 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users_tokens
     ADD CONSTRAINT users_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: leagues_competition_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX leagues_competition_id_index ON public.leagues USING btree (competition_id);
+
+
+--
+-- Name: leagues_entry_code_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX leagues_entry_code_index ON public.leagues USING btree (entry_code);
 
 
 --
@@ -484,6 +547,14 @@ CREATE INDEX users_tokens_user_id_index ON public.users_tokens USING btree (user
 
 
 --
+-- Name: leagues leagues_competition_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.leagues
+    ADD CONSTRAINT leagues_competition_id_fkey FOREIGN KEY (competition_id) REFERENCES public.competitions(id);
+
+
+--
 -- Name: matches matches_away_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -520,7 +591,7 @@ ALTER TABLE ONLY public.prediction_sets
 --
 
 ALTER TABLE ONLY public.prediction_sets
-    ADD CONSTRAINT prediction_sets_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+    ADD CONSTRAINT prediction_sets_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
@@ -586,3 +657,6 @@ INSERT INTO public."schema_migrations" (version) VALUES (20240320211247);
 INSERT INTO public."schema_migrations" (version) VALUES (20240323044701);
 INSERT INTO public."schema_migrations" (version) VALUES (20240410195826);
 INSERT INTO public."schema_migrations" (version) VALUES (20240412194205);
+INSERT INTO public."schema_migrations" (version) VALUES (20240427060457);
+INSERT INTO public."schema_migrations" (version) VALUES (20240427131520);
+INSERT INTO public."schema_migrations" (version) VALUES (20240516074203);

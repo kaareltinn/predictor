@@ -74,6 +74,13 @@ defmodule PredictorWeb.Router do
       live "/competitions/:competition_id/prediction_sets/:prediction_set_id/predictions/new",
            Predictions.PredictionLive.Index,
            :new
+
+      live "/leagues", LeagueLive.Index, :index
+      live "/leagues/new", LeagueLive.Index, :new
+      live "/leagues/:id/edit", LeagueLive.Index, :edit
+
+      live "/leagues/:id", LeagueLive.Show, :show
+      live "/leagues/:id/show/edit", LeagueLive.Show, :edit
     end
   end
 
