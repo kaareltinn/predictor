@@ -10,7 +10,7 @@ defmodule PredictorWeb.LeagueLiveTest do
   @invalid_attrs %{name: nil, competition_id: nil}
 
   describe "Index" do
-    setup [:create_competition, :create_league, :register_and_log_in_user]
+    setup [:create_competition, :register_and_log_in_user, :create_league]
 
     test "lists all leagues", %{conn: conn, league: league} do
       {:ok, _index_live, html} = live(conn, ~p"/leagues")
@@ -82,8 +82,8 @@ defmodule PredictorWeb.LeagueLiveTest do
     setup [
       :create_competition,
       :create_another_competition,
-      :create_league,
-      :register_and_log_in_user
+      :register_and_log_in_user,
+      :create_league
     ]
 
     test "displays league", %{conn: conn, league: league, competition: competition} do
@@ -127,6 +127,13 @@ defmodule PredictorWeb.LeagueLiveTest do
 
   defp create_league(context) do
     league = league_fixture(%{competition_id: context.competition.id})
+
+    user_league_fixture(%{
+      user_id: context.user.id,
+      prediction_set_id: nil,
+      league_id: league.id
+    })
+
     %{league: league}
   end
 

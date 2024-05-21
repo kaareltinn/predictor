@@ -3,18 +3,42 @@ defmodule Predictor.LeaguesTest do
 
   alias Predictor.Leagues
 
+  import Predictor.AccountsFixtures
   import Predictor.LeaguesFixtures
   import Predictor.CompetitionsFixtures
+  import Predictor.PredictionsFixtures
 
   describe "leagues" do
     alias Predictor.Leagues.League
 
     @invalid_attrs %{name: nil, entry_code: nil}
 
-    setup [:setup_league]
+    setup [:create_league, :create_user]
 
     test "list_leagues/0 returns all leagues", %{league: league} do
       assert Leagues.list_leagues() == [league]
+    end
+
+    test "list_user_leagues/1 returns all user leagues", %{user: user, competition: competition} do
+      prediction_set1 = prediction_set_fixture(%{user: user, competition: competition})
+
+      league1 = league_fixture(%{competition_id: competition.id, entry_code: "abc123"})
+      league2 = league_fixture(%{competition_id: competition.id, entry_code: "def456"})
+      _league3 = league_fixture(%{competition_id: competition.id, entry_code: "ghi789"})
+
+      user_league_fixture(%{
+        user_id: user.id,
+        prediction_set_id: prediction_set1.id,
+        league_id: league1.id
+      })
+
+      user_league_fixture(%{
+        user_id: user.id,
+        prediction_set_id: prediction_set1.id,
+        league_id: league2.id
+      })
+
+      assert Leagues.list_user_leagues(user.id) == [league1, league2]
     end
 
     test "get_league!/1 returns the league with given id", %{league: league} do
@@ -59,9 +83,14 @@ defmodule Predictor.LeaguesTest do
     end
   end
 
-  defp setup_league(context) do
+  defp create_league(_context) do
     competition = competition_fixture()
     league = league_fixture(%{competition_id: competition.id})
-    Map.merge(context, %{league: league, competition: competition})
+    %{league: league, competition: competition}
+  end
+
+  defp create_user(_) do
+    user = user_fixture()
+    %{user: user}
   end
 end

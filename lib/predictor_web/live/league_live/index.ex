@@ -8,7 +8,8 @@ defmodule PredictorWeb.LeagueLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    leagues = Leagues.list_leagues() |> Repo.preload(:competition)
+    leagues =
+      Leagues.list_user_leagues(socket.assigns.current_user.id) |> Repo.preload(:competition)
 
     {:ok,
      socket

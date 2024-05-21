@@ -4,6 +4,8 @@ defmodule Predictor.LeaguesFixtures do
   entities via the `Predictor.Leagues` context.
   """
 
+  alias Predictor.Repo
+
   @doc """
   Generate a league.
   """
@@ -17,5 +19,23 @@ defmodule Predictor.LeaguesFixtures do
       |> Predictor.Leagues.create_league()
 
     league
+  end
+
+  def user_league_fixture(attrs) do
+    placeholders = %{now: DateTime.utc_now() |> DateTime.truncate(:second)}
+
+    Repo.insert_all(
+      "users_leagues",
+      [
+        [
+          user_id: attrs.user_id,
+          prediction_set_id: attrs[:prediction_set],
+          league_id: attrs.league_id,
+          inserted_at: {:placeholder, :now},
+          updated_at: {:placeholder, :now}
+        ]
+      ],
+      placeholders: placeholders
+    )
   end
 end

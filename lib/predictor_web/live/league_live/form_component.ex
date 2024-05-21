@@ -77,10 +77,7 @@ defmodule PredictorWeb.LeagueLive.FormComponent do
   end
 
   defp save_league(socket, :new, league_params) do
-    entry_code = generate_random_entry_code()
-    params = Map.put(league_params, "entry_code", entry_code)
-
-    case Leagues.create_league(params) do
+    case create_league_with_user(socket.assigns.user, league_params) do
       {:ok, league} ->
         notify_parent({:saved, Repo.preload(league, :competition)})
 
@@ -92,6 +89,21 @@ defmodule PredictorWeb.LeagueLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
     end
+  end
+
+  defp create_league_with_user(user, league_params) do
+    entry_code = generate_random_entry_code()
+    params = Map.put(league_params, "entry_code", entry_code)
+
+    Repo.transaction(fn ->
+      with {:ok, league} <- Leagues.create_league(params),
+           {_num, _} <- Leagues.add_user_to_league(%{user_id: user.id, league_id: league.id}) do
+        league
+      else
+        {:error, %Ecto.Changeset{} = changeset} ->
+          Repo.rollback(changeset)
+      end
+    end)
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do

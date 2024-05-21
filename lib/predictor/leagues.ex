@@ -22,6 +22,48 @@ defmodule Predictor.Leagues do
   end
 
   @doc """
+  Returns the list of user leagues.
+
+  ## Examples
+
+      iex> list_user_leagues(123)
+      [%League{}, ...]
+  """
+  def list_user_leagues(user_id) do
+    user_leagues_query =
+      from ul in "users_leagues",
+        where: ul.user_id == ^user_id,
+        select: %{league_id: ul.league_id}
+
+    query =
+      from l in League,
+        join: ul in subquery(user_leagues_query),
+        on: l.id == ul.league_id
+
+    Repo.all(query)
+  end
+
+  def add_user_to_league(attrs \\ %{}) do
+    placeholders = %{now: DateTime.utc_now() |> DateTime.truncate(:second)}
+
+    Repo.insert_all(
+      "users_leagues",
+      [
+        [
+          user_id: attrs.user_id,
+          prediction_set_id: attrs[:prediction_set_id],
+          league_id: attrs.league_id,
+          inserted_at: {:placeholder, :now},
+          updated_at: {:placeholder, :now}
+        ]
+      ],
+      on_conflict: {:replace, [:prediction_set_id]},
+      conflict_target: [:user_id, :league_id],
+      placeholders: placeholders
+    )
+  end
+
+  @doc """
   Gets a single league.
 
   Raises `Ecto.NoResultsError` if the League does not exist.

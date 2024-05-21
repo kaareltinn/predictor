@@ -2,7 +2,6 @@ defmodule Predictor.Leagues.League do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Predictor.Repo
   alias Predictor.Competitions.Competition
 
   schema "leagues" do
