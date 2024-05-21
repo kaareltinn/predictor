@@ -173,38 +173,6 @@ ALTER SEQUENCE public.prediction_sets_id_seq OWNED BY public.prediction_sets.id;
 
 
 --
--- Name: prediction_sets_leagues; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.prediction_sets_leagues (
-    id bigint NOT NULL,
-    prediction_set_id bigint NOT NULL,
-    league_id bigint NOT NULL,
-    inserted_at timestamp(0) without time zone NOT NULL,
-    updated_at timestamp(0) without time zone NOT NULL
-);
-
-
---
--- Name: prediction_sets_leagues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.prediction_sets_leagues_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: prediction_sets_leagues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.prediction_sets_leagues_id_seq OWNED BY public.prediction_sets_leagues.id;
-
-
---
 -- Name: predictions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -320,6 +288,39 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: users_leagues; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users_leagues (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    prediction_set_id bigint,
+    league_id bigint NOT NULL,
+    inserted_at timestamp(0) without time zone NOT NULL,
+    updated_at timestamp(0) without time zone NOT NULL
+);
+
+
+--
+-- Name: users_leagues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_leagues_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_leagues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_leagues_id_seq OWNED BY public.users_leagues.id;
+
+
+--
 -- Name: users_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -381,13 +382,6 @@ ALTER TABLE ONLY public.prediction_sets ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- Name: prediction_sets_leagues id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prediction_sets_leagues ALTER COLUMN id SET DEFAULT nextval('public.prediction_sets_leagues_id_seq'::regclass);
-
-
---
 -- Name: predictions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -406,6 +400,13 @@ ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: users_leagues id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_leagues ALTER COLUMN id SET DEFAULT nextval('public.users_leagues_id_seq'::regclass);
 
 
 --
@@ -440,14 +441,6 @@ ALTER TABLE ONLY public.matches
 
 
 --
--- Name: prediction_sets_leagues prediction_sets_leagues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prediction_sets_leagues
-    ADD CONSTRAINT prediction_sets_leagues_pkey PRIMARY KEY (id);
-
-
---
 -- Name: prediction_sets prediction_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -477,6 +470,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_leagues users_leagues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_leagues
+    ADD CONSTRAINT users_leagues_pkey PRIMARY KEY (id);
 
 
 --
@@ -545,13 +546,6 @@ CREATE INDEX prediction_sets_competition_id_index ON public.prediction_sets USIN
 
 
 --
--- Name: prediction_sets_leagues_prediction_set_id_league_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX prediction_sets_leagues_prediction_set_id_league_id_index ON public.prediction_sets_leagues USING btree (prediction_set_id, league_id);
-
-
---
 -- Name: prediction_sets_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -584,6 +578,13 @@ CREATE UNIQUE INDEX teams_code_index ON public.teams USING btree (code);
 --
 
 CREATE UNIQUE INDEX users_email_index ON public.users USING btree (email);
+
+
+--
+-- Name: users_leagues_user_id_league_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX users_leagues_user_id_league_id_index ON public.users_leagues USING btree (user_id, league_id);
 
 
 --
@@ -641,22 +642,6 @@ ALTER TABLE ONLY public.prediction_sets
 
 
 --
--- Name: prediction_sets_leagues prediction_sets_leagues_league_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prediction_sets_leagues
-    ADD CONSTRAINT prediction_sets_leagues_league_id_fkey FOREIGN KEY (league_id) REFERENCES public.leagues(id) ON DELETE CASCADE;
-
-
---
--- Name: prediction_sets_leagues prediction_sets_leagues_prediction_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.prediction_sets_leagues
-    ADD CONSTRAINT prediction_sets_leagues_prediction_set_id_fkey FOREIGN KEY (prediction_set_id) REFERENCES public.prediction_sets(id) ON DELETE CASCADE;
-
-
---
 -- Name: prediction_sets prediction_sets_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -702,6 +687,30 @@ ALTER TABLE ONLY public.predictions
 
 ALTER TABLE ONLY public.predictions
     ADD CONSTRAINT predictions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users_leagues users_leagues_league_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_leagues
+    ADD CONSTRAINT users_leagues_league_id_fkey FOREIGN KEY (league_id) REFERENCES public.leagues(id) ON DELETE CASCADE;
+
+
+--
+-- Name: users_leagues users_leagues_prediction_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_leagues
+    ADD CONSTRAINT users_leagues_prediction_set_id_fkey FOREIGN KEY (prediction_set_id) REFERENCES public.prediction_sets(id) ON DELETE CASCADE;
+
+
+--
+-- Name: users_leagues users_leagues_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_leagues
+    ADD CONSTRAINT users_leagues_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
