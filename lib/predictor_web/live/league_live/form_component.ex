@@ -97,7 +97,7 @@ defmodule PredictorWeb.LeagueLive.FormComponent do
 
     Repo.transaction(fn ->
       with {:ok, league} <- Leagues.create_league(params),
-           {_num, _} <- Leagues.add_user_to_league(%{user_id: user.id, league_id: league.id}) do
+           {_num, _} <- Leagues.upsert_user_league(%{user_id: user.id, league_id: league.id}) do
         league
       else
         {:error, %Ecto.Changeset{} = changeset} ->

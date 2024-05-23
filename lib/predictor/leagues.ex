@@ -7,6 +7,7 @@ defmodule Predictor.Leagues do
   alias Predictor.Repo
 
   alias Predictor.Leagues.League
+  alias Predictor.Leagues.JoinLeague
 
   @doc """
   Returns the list of leagues.
@@ -43,7 +44,7 @@ defmodule Predictor.Leagues do
     Repo.all(query)
   end
 
-  def add_user_to_league(attrs \\ %{}) do
+  def upsert_user_league(attrs \\ %{}) do
     placeholders = %{now: DateTime.utc_now() |> DateTime.truncate(:second)}
 
     Repo.insert_all(
@@ -63,6 +64,26 @@ defmodule Predictor.Leagues do
     )
   end
 
+  def add_user_to_league(user_id, join_league, params) do
+    changeset = change_join_league(join_league, params)
+
+    if changeset.valid? do
+      {:ok, league} =
+        get_league_by_entry_code(Ecto.Changeset.get_field(changeset, :entry_code))
+
+      {1, _} =
+        upsert_user_league(%{
+          user_id: user_id,
+          prediction_set_id: Ecto.Changeset.get_field(changeset, :prediction_set_id),
+          league_id: league.id
+        })
+
+      :ok
+    else
+      {:error, changeset}
+    end
+  end
+
   @doc """
   Gets a single league.
 
@@ -78,6 +99,16 @@ defmodule Predictor.Leagues do
 
   """
   def get_league!(id), do: Repo.get!(League, id) |> Repo.preload(:competition)
+
+  def get_league_by_entry_code(entry_code) do
+    league = Repo.get_by(League, entry_code: entry_code)
+
+    if league do
+      {:ok, league}
+    else
+      {:error, :not_found}
+    end
+  end
 
   @doc """
   Creates a league.
@@ -142,5 +173,9 @@ defmodule Predictor.Leagues do
   """
   def change_league(%League{} = league, attrs \\ %{}) do
     League.changeset(league, attrs)
+  end
+
+  def change_join_league(%JoinLeague{} = join_league, attrs \\ %{}) do
+    JoinLeague.changeset(join_league, attrs)
   end
 end

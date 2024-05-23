@@ -4,6 +4,7 @@ defmodule PredictorWeb.LeagueLive.Index do
   alias Predictor.Repo
   alias Predictor.Leagues
   alias Predictor.Leagues.League
+  alias Predictor.Leagues.JoinLeague
   alias Predictor.Competitions
 
   @impl true
@@ -38,6 +39,11 @@ defmodule PredictorWeb.LeagueLive.Index do
     socket
     |> assign(:page_title, "Listing Leagues")
     |> assign(:league, nil)
+  end
+
+  defp apply_action(socket, :join, _params) do
+    socket
+    |> assign(:page_title, "Join League")
   end
 
   @impl true

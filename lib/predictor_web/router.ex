@@ -77,6 +77,7 @@ defmodule PredictorWeb.Router do
 
       live "/leagues", LeagueLive.Index, :index
       live "/leagues/new", LeagueLive.Index, :new
+      live "/leagues/join", LeagueLive.Index, :join
       live "/leagues/:id/edit", LeagueLive.Index, :edit
 
       live "/leagues/:id", LeagueLive.Show, :show

@@ -1,6 +1,9 @@
 <.header>
-  Listing Leagues
+  Leagues
   <:actions>
+    <.link patch={~p"/leagues/join"}>
+      <.button>Join League</.button>
+    </.link>
     <.link patch={~p"/leagues/new"}>
       <.button>New League</.button>
     </.link>
@@ -30,6 +33,17 @@
     </.link>
   </:action>
 </.table>
+
+<.modal :if={@live_action == :join} id="join-league-modal" show on_cancel={JS.patch(~p"/leagues")}>
+  <.live_component
+    module={PredictorWeb.LeagueLive.JoinFormComponent}
+    id={:join}
+    title="Join League"
+    join_league={%JoinLeague{}}
+    user={@current_user}
+    patch={~p"/leagues"}
+  />
+</.modal>
 
 <.modal :if={@live_action in [:new, :edit]} id="league-modal" show on_cancel={JS.patch(~p"/leagues")}>
   <.live_component
