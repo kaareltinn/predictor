@@ -61,10 +61,7 @@ defmodule PredictorWeb.LeagueLive.JoinFormComponent do
     join_league(socket, params)
   end
 
-  defp join_league(
-         socket,
-         join_league_params
-       ) do
+  defp join_league(socket, join_league_params) do
     case Leagues.add_user_to_league(
            socket.assigns.user.id,
            socket.assigns.join_league,
@@ -79,6 +76,7 @@ defmodule PredictorWeb.LeagueLive.JoinFormComponent do
         }
 
       {:error, changeset} ->
+        changeset = Map.put(changeset, :action, :validate)
         {:noreply, assign_form(socket, changeset)}
     end
   end

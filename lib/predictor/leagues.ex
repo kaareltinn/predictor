@@ -65,7 +65,10 @@ defmodule Predictor.Leagues do
   end
 
   def add_user_to_league(user_id, join_league, params) do
-    changeset = change_join_league(join_league, params)
+    changeset =
+      join_league
+      |> change_join_league(params)
+      |> JoinLeague.validate_entry_code_exists()
 
     if changeset.valid? do
       {:ok, league} =
