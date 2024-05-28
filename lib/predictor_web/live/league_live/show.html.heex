@@ -20,6 +20,10 @@
     <%= i + 1 %>
   </:col>
 
+  <:col :let={{ps, _}} label="Name">
+    <%= ps.name %>
+  </:col>
+
   <:col :let={{ps, _}} label="User">
     <%= ps.user_email %>
   </:col>
