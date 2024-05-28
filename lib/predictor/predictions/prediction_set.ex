@@ -4,12 +4,14 @@ defmodule Predictor.Predictions.PredictionSet do
 
   alias Predictor.Accounts.User
   alias Predictor.Competitions.Competition
+  alias Predictor.Predictions.Prediction
 
   schema "prediction_sets" do
     field :name, :string
 
     belongs_to :user, User
     belongs_to :competition, Competition
+    has_many :predictions, Prediction
 
     timestamps(type: :utc_datetime)
   end

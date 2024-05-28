@@ -5,19 +5,19 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.Index do
   alias Predictor.Predictions.Scorer
   alias Predictor.Competitions
 
+  alias Predictor.Repo
+
   def mount(_params, _session, socket) do
     prediction_sets = Predictions.list_user_prediction_sets(socket.assigns.current_user.id)
 
-    matches_by_prediction_set_id =
-      prediction_sets
-      |> Enum.map(& &1.id)
-      |> Map.new(fn id -> {id, Competitions.list_matches_with_predictions(id)} end)
+    predictions =
+      list_predictions(prediction_sets)
 
     {
       :ok,
       socket
       |> assign(:prediction_sets, prediction_sets)
-      |> assign(:matches_by_prediction_set_id, matches_by_prediction_set_id)
+      |> assign(:predictions, predictions)
     }
   end
 
@@ -51,10 +51,16 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.Index do
         </:col>
 
         <:col :let={ps} label="Score">
-          <%= Scorer.score(@matches_by_prediction_set_id[ps.id]) %>
+          <%= Scorer.score(@predictions[ps.id]) %>
         </:col>
       </.table>
     </div>
     """
+  end
+
+  defp list_predictions(prediction_sets) do
+    prediction_sets
+    |> Repo.preload(predictions: [:home_team, :away_team, {:match, [:home_team, :away_team]}])
+    |> Map.new(fn ps -> {ps.id, ps.predictions} end)
   end
 end

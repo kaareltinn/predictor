@@ -17,10 +17,19 @@ defmodule Predictor.Predictions do
       [%Prediction{}, ...]
 
   """
-  def list_predictions do
-    Prediction
+  def list_predictions(prediction_set_id) do
+    query =
+      from p in Prediction,
+        where: p.prediction_set_id == ^prediction_set_id
+
+    query
     |> Repo.all()
-    |> Repo.preload([:user, {:match, [:competition, :home_team, :away_team]}])
+    |> Repo.preload([
+      :user,
+      :home_team,
+      :away_team,
+      {:match, [:competition, :home_team, :away_team]}
+    ])
   end
 
   @doc """
