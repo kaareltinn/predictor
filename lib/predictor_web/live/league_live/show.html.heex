@@ -14,18 +14,18 @@
 
 <.table
   id="prediction_sets"
-  rows={@prediction_sets}
+  rows={Enum.with_index(@prediction_sets)}
 >
-  <:col :let={ps} label="Name">
-    <%= ps.name %>
+  <:col :let={{_ps, i}} label="Position">
+    <%= i + 1 %>
   </:col>
 
-  <:col :let={ps} label="User">
-    <%= ps.user.email %>
+  <:col :let={{ps, _}} label="User">
+    <%= ps.user_email %>
   </:col>
 
-  <:col :let={ps} label="Score">
-    <%= Scorer.score(ps.predictions) %>
+  <:col :let={{ps, _}} label="Score">
+    <%= ps.score %>
   </:col>
 </.table>
 

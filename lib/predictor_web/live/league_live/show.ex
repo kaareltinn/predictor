@@ -36,5 +36,16 @@ defmodule PredictorWeb.LeagueLive.Show do
         {:match, [:home_team, :away_team]}
       ]
     ])
+    |> Enum.map(&map_prediction_set/1)
+    |> Enum.sort_by(& &1.score, :desc)
+  end
+
+  defp map_prediction_set(prediction_set) do
+    %{
+      id: prediction_set.id,
+      name: prediction_set.name,
+      user_email: prediction_set.user.email,
+      score: Scorer.score(prediction_set.predictions)
+    }
   end
 end
