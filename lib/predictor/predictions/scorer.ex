@@ -3,40 +3,40 @@ defmodule Predictor.Predictions.Scorer do
   @stage_points %{eigth: 15, quarter: 20, semi: 25, third: 26, final: 30}
   @winner_points %{third: 30, final: 40}
 
-  def score(matches_with_predictions) do
-    matches_by_stage = Enum.group_by(matches_with_predictions, & &1.stage)
+  def score(predictions) do
+    predictions_by_stage = Enum.group_by(predictions, & &1.match.stage)
 
     [
-      score_stage(matches_by_stage, :group),
-      score_stage(matches_by_stage, :eigth),
-      score_stage(matches_by_stage, :quarter),
-      score_stage(matches_by_stage, :semi),
-      score_stage(matches_by_stage, :third),
-      score_stage(matches_by_stage, :final),
-      score_winner(matches_by_stage, :third),
-      score_winner(matches_by_stage, :final)
+      score_stage(predictions_by_stage[:group], :group),
+      score_stage(predictions_by_stage[:eigth], :eigth),
+      score_stage(predictions_by_stage[:quarter], :quarter),
+      score_stage(predictions_by_stage[:semi], :semi),
+      score_stage(predictions_by_stage[:third], :third),
+      score_stage(predictions_by_stage[:final], :final),
+      score_winner(predictions_by_stage[:third], :third),
+      score_winner(predictions_by_stage[:final], :final)
     ]
     |> Enum.sum()
   end
 
-  def score_stage(matches, :group) do
-    Enum.reduce(matches[:group], 0, fn match, acc ->
-      acc + score_match(match)
+  def score_stage(predictions, _) when is_nil(predictions), do: 0
+
+  def score_stage(predictions, :group) do
+    Enum.reduce(predictions, 0, fn prediction, acc ->
+      acc + score_match(prediction)
     end)
   end
 
-  def score_stage(matches, stage) when stage in @playoff_stages do
-    stage_matches = matches[stage]
-
+  def score_stage(predictions, stage) when stage in @playoff_stages do
     actual_teams =
-      stage_matches
-      |> Enum.flat_map(&[&1.home_team, &1.away_team])
+      predictions
+      |> Enum.flat_map(&[&1.match.home_team, &1.match.away_team])
       |> Enum.filter(& &1)
       |> Enum.map(& &1.code)
 
     state =
-      Enum.reduce(stage_matches, %{score: 0, teams: MapSet.new()}, fn match, acc ->
-        {score, teams} = score_match(match)
+      Enum.reduce(predictions, %{score: 0, teams: MapSet.new()}, fn prediction, acc ->
+        {score, teams} = score_match(prediction)
 
         %{
           acc
@@ -48,40 +48,40 @@ defmodule Predictor.Predictions.Scorer do
     state.score + score_teams(stage, state.teams, actual_teams)
   end
 
-  defp score_match(%{stage: stage, status: :scheduled}) when stage in @playoff_stages do
+  defp score_match(%{match: %{stage: stage, status: :scheduled}}) when stage in @playoff_stages do
     {0, []}
   end
 
-  defp score_match(%{stage: :group, status: :scheduled}) do
+  defp score_match(%{match: %{stage: :group, status: :scheduled}}) do
     0
   end
 
-  defp score_match(%{stage: :group, status: :finished} = match) do
-    case {result(match), result(match.user_prediction)} do
-      {:home_win, :home_win} -> compute_score(match)
-      {:away_win, :away_win} -> compute_score(match)
-      {:draw, :draw} -> compute_score(match)
+  defp score_match(%{match: %{stage: :group, status: :finished}} = prediction) do
+    case {result(prediction), result(prediction.match)} do
+      {:home_win, :home_win} -> compute_score(prediction)
+      {:away_win, :away_win} -> compute_score(prediction)
+      {:draw, :draw} -> compute_score(prediction)
       _ -> 0
     end
   end
 
-  defp score_match(%{stage: stage, status: :finished} = match)
+  defp score_match(%{match: %{stage: stage, status: :finished}} = prediction)
        when stage in @playoff_stages do
     points = @stage_points[stage]
 
     cond do
-      match.home_team.code == match.user_prediction.home_team.code &&
-          match.away_team.code == match.user_prediction.away_team.code ->
+      prediction.home_team.code == prediction.match.home_team.code &&
+          prediction.away_team.code == prediction.match.away_team.code ->
         {points * 2, []}
 
-      match.home_team.code == match.user_prediction.home_team.code ->
-        {points, [match.user_prediction.away_team.code]}
+      prediction.home_team.code == prediction.match.home_team.code ->
+        {points, [prediction.away_team.code]}
 
-      match.away_team.code == match.user_prediction.away_team.code ->
-        {points, [match.user_prediction.home_team.code]}
+      prediction.away_team.code == prediction.match.away_team.code ->
+        {points, [prediction.home_team.code]}
 
       true ->
-        {0, [match.user_prediction.home_team.code, match.user_prediction.away_team.code]}
+        {0, [prediction.home_team.code, prediction.away_team.code]}
     end
   end
 
@@ -92,9 +92,9 @@ defmodule Predictor.Predictions.Scorer do
     |> Kernel.*(@stage_points[stage] - 5)
   end
 
-  defp score_winner(matches, stage) do
-    with [%{status: :finished} = match] <- matches[stage] do
-      case {result(match), result(match.user_prediction)} do
+  defp score_winner(predictions, stage) do
+    with [%{match: %{status: :finished} = match} = prediction] <- predictions do
+      case {result(match), result(prediction.match)} do
         {:home_win, :home_win} -> @winner_points[stage]
         {:away_win, :away_win} -> @winner_points[stage]
         _ -> 0
@@ -112,8 +112,8 @@ defmodule Predictor.Predictions.Scorer do
     end
   end
 
-  defp compute_score(match) do
-    10 - abs(match.user_prediction.home_goals - match.home_goals) -
-      abs(match.user_prediction.away_goals - match.away_goals)
+  defp compute_score(prediction) do
+    10 - abs(prediction.match.home_goals - prediction.home_goals) -
+      abs(prediction.match.away_goals - prediction.away_goals)
   end
 end

@@ -16,11 +16,11 @@ defmodule Predictor.Predictions.ScorerTest do
 
   describe "score/1" do
     test "scoring without predictions", %{prediction_set: prediction_set} do
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 0
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 0
     end
 
-    test "scoring when single prediction but no matches finished yet", %{
+    test "scoring when single prediction but no match finished yet", %{
       prediction_set: prediction_set,
       matches_by_code: matches
     } do
@@ -31,8 +31,8 @@ defmodule Predictor.Predictions.ScorerTest do
         away_goals: 0
       })
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 0
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 0
     end
 
     test "scoring when single prediction with finished group stage match", %{
@@ -50,8 +50,8 @@ defmodule Predictor.Predictions.ScorerTest do
 
       Competitions.update_match(match, %{status: :finished, home_goals: 1, away_goals: 0})
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 10
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 10
     end
 
     test "scoring prediction with finished 1/8 stage match (both teams correct)", %{
@@ -74,8 +74,8 @@ defmodule Predictor.Predictions.ScorerTest do
         away_team_id: get_team(teams, "GER").id
       })
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 30
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 30
     end
 
     test "scoring prediction with finished 1/8 stage match (one team correct, another wrong spot)",
@@ -115,8 +115,8 @@ defmodule Predictor.Predictions.ScorerTest do
         away_team_id: get_team(teams, "ENG").id
       })
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 35
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 35
     end
 
     test "scoring prediction with finished 1/4 stage matches",
@@ -184,8 +184,8 @@ defmodule Predictor.Predictions.ScorerTest do
         away_team_id: get_team(teams, "CRO").id
       })
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 80
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 80
     end
 
     test "scoring prediction with finished 1/2 stage matches",
@@ -225,8 +225,8 @@ defmodule Predictor.Predictions.ScorerTest do
         away_team_id: get_team(teams, "ARG").id
       })
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 65
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 65
     end
 
     test "scoring prediction with finished third place match",
@@ -254,8 +254,8 @@ defmodule Predictor.Predictions.ScorerTest do
         away_goals: 1
       })
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 26 + 30
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 26 + 30
     end
 
     test "scoring prediction with finished final place match",
@@ -283,8 +283,8 @@ defmodule Predictor.Predictions.ScorerTest do
         away_goals: 1
       })
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 30 + 40
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 30 + 40
     end
 
     test "scoring when multiple predictions and results", %{
@@ -318,8 +318,8 @@ defmodule Predictor.Predictions.ScorerTest do
       # 0
       |> Competitions.update_match(%{status: :finished, home_goals: 1, away_goals: 2})
 
-      matches = Competitions.list_matches_with_predictions(prediction_set.id)
-      assert Scorer.score(matches) == 23
+      predictions = Predictions.list_predictions(prediction_set.id)
+      assert Scorer.score(predictions) == 23
     end
   end
 
