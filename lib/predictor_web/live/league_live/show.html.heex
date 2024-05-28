@@ -1,6 +1,6 @@
 <.header>
-  League <%= @league.id %>
-  <:subtitle>This is a league record from your database.</:subtitle>
+  <%= @league.name %>
+  <:subtitle><%= @league.competition.name %></:subtitle>
   <:actions>
     <.link patch={~p"/leagues/#{@league}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit league</.button>
@@ -9,10 +9,25 @@
 </.header>
 
 <.list>
-  <:item title="Competition"><%= @league.competition.name %></:item>
   <:item title="Entry code"><%= @league.entry_code %></:item>
-  <:item title="Name"><%= @league.name %></:item>
 </.list>
+
+<.table
+  id="prediction_sets"
+  rows={@prediction_sets}
+>
+  <:col :let={ps} label="Name">
+    <%= ps.name %>
+  </:col>
+
+  <:col :let={ps} label="User">
+    <%= ps.user.email %>
+  </:col>
+
+  <:col :let={ps} label="Score">
+    <%= Scorer.score(ps.predictions) %>
+  </:col>
+</.table>
 
 <.back navigate={~p"/leagues"}>Back to leagues</.back>
 

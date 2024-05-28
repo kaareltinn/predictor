@@ -9,6 +9,8 @@ defmodule Predictor.Leagues do
   alias Predictor.Leagues.League
   alias Predictor.Leagues.JoinLeague
 
+  alias Predictor.Predictions.PredictionSet
+
   @doc """
   Returns the list of leagues.
 
@@ -85,6 +87,17 @@ defmodule Predictor.Leagues do
     else
       {:error, changeset}
     end
+  end
+
+  def list_prediction_sets(league_id) do
+    league_id = String.to_integer(league_id)
+
+    query =
+      from ul in "users_leagues",
+        select: %{prediction_set_id: ul.prediction_set_id},
+        where: ul.league_id == ^league_id
+
+    Repo.all(from ps in PredictionSet, where: ps.id in subquery(query))
   end
 
   @doc """

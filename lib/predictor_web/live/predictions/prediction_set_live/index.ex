@@ -3,7 +3,6 @@ defmodule PredictorWeb.Predictions.PredictionSetLive.Index do
 
   alias Predictor.Predictions
   alias Predictor.Predictions.Scorer
-  alias Predictor.Competitions
 
   alias Predictor.Repo
 
