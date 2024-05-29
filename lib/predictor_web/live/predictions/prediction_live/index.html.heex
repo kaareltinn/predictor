@@ -46,6 +46,7 @@
           <.input
             type="number"
             min="0"
+            disabled={m.stage in [:eigth, :quarter, :semi]}
             field={@form[:home_goals]}
             value={if m.user_prediction, do: m.user_prediction.home_goals, else: 0}
             form={"prediction-form-#{m.id}"}
@@ -57,6 +58,7 @@
           <.input
             type="number"
             min="0"
+            disabled={m.stage in [:eigth, :quarter, :semi]}
             field={@form[:away_goals]}
             value={if m.user_prediction, do: m.user_prediction.away_goals, else: 0}
             form={"prediction-form-#{m.id}"}
